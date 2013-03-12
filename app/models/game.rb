@@ -60,12 +60,14 @@ class Game < ActiveRecord::Base
       a = Actor.get_from_internet_and_filmography(actor.tmdb_id)
     end
     movies = actor.movies.order("times_said DESC").order("tmdb_popularity DESC")
-    movies = movies[0,3]
-    movies.reject!{|x| self.movies.include?(x)}
+    new_movies = movies[0,2]
+    new_movies << movies.sample
+    new_movies = new_movies.shuffle
+    new_movies.reject!{|x| self.movies.include?(x)}
     if movies.length == 0
       return nil
     else
-      return movies[0]
+      return new_movies[0]
     end
   end
 

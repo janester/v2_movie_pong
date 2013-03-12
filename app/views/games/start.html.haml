@@ -5,6 +5,7 @@
   .small-7.small-centered.columns#play_container
     %h3 Enter an Actor in:
     %p#movie_title
+    #spinner
     #movie_tmdb.hide
     =text_field_tag :entered_actor
     =link_to("Enter", "#", :class => "button radius", :id => "entered_actor_btn")

@@ -29,8 +29,14 @@ class GamesController < ApplicationController
 
       end
     else
+      if actor == ""
+        message = "Sorry! You got a point!"
+      else
+        movie = Movie.where(:tmdb_id => movie).first.title
+        message = "Sorry! #{actor} wasn't in #{movie}"
+      end
       game.scores << Score.create(:player => 1)
-      render :json => {scores:game.scores, message:"Sorry! #{actor} wasn't in #{game.movies.last.title}"}
+      render :json => {scores:game.scores, message:message}
     end
 
   end
