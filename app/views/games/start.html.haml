@@ -1,0 +1,20 @@
+.row
+  .small-4.small-offset-2.columns
+    %h2#round_count Round #1
+.row
+  .small-7.small-centered.columns#play_container
+    %h3 Enter an Actor in:
+    %p#movie_title
+    #movie_tmdb.hide
+    =text_field_tag :entered_actor
+    =link_to("Enter", "#", :class => "button radius", :id => "entered_actor_btn")
+    %h3#or OR
+    =link_to("Ask For A New Movie", "#", :class => "button radius", :id => "new_movie_btn")
+    #game.hide= @game.id
+#pageScoreboard.scoreboard
+  #computer
+    Computer Score
+    #computer_score PON
+  #player
+    Player Score
+    #player_score PONG

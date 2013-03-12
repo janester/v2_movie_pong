@@ -1,0 +1,11 @@
+.row
+  .small-12.columns
+    %h1 Login to Movie Pong
+.row
+  .small-4.small-centered.columns
+    =form_tag '/login' do
+      =label_tag 'username'
+      =text_field_tag 'username', nil, :autofocus => true, :placeholder => "janedoe"
+      =label_tag 'password'
+      =password_field_tag 'password'
+      =submit_tag 'Login to Movie Pong', :class => 'button radius'

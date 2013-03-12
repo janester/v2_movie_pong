@@ -1,0 +1,15 @@
+.row
+  .small-12.columns
+    %h1 Sign Up for Movie Pong!
+.row
+  .small-4.small-centered.columns
+    =form_for @user do |f|
+      =f.label :name
+      =f.text_field :name, :autofocus => true, :placeholder => "Jane Doe"
+      =f.label :username
+      =f.text_field :username, :autofocus => true, :placeholder => "janedoe"
+      =f.label :password
+      =f.password_field :password, :placeholder => "example: abc"
+      =f.label :password_confirmation
+      =f.password_field :password_confirmation, :placeholder => "example: abc"
+      =f.submit "Create Account", :class=>"button radius"

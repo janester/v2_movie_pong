@@ -1,0 +1,107 @@
+@import url(http://fonts.googleapis.com/css?family=Codystar);
+@import url(http://fonts.googleapis.com/css?family=Graduate);
+@import url(http://fonts.googleapis.com/css?family=Limelight);
+#play_container {
+  text-align: center;
+}
+
+.hide {
+  display: hidden;
+}
+
+.scoreboard {
+  font-family: 'Graduate', cursive;
+  font-size: 28px;
+  width: 270px;
+  color: gold;
+  height: 305px;
+  background: red;
+  border: 5px solid black;
+  text-align: center;
+  #player{
+    position: relative;
+    top: 65px;
+
+    #player_score {
+      margin-top: 30px;
+      color: white;
+
+    }
+  }
+  #computer{
+    margin-top: 20px;
+    #computer_score {
+      margin-top: 30px;
+      color: white;
+    }
+  }
+}
+
+#myModal {
+  text-align: center;
+  #play_again_btn {
+    margin-top: 20px;
+  }
+  #modalScoreboard {
+  .scoreboard {
+    margin: auto;
+    }
+  }
+}
+#pageScoreboard {
+  display: inline-block;
+  position: relative;
+  right: -1070px;
+  top: -250px;
+  text-align: center;
+  vertical-align: middle;
+}
+#rule_list{
+  margin-left: 18px;
+}
+
+#header {
+  background: url("/assets/marquee_main.png")
+   bottom;
+   background-repeat: none;
+  height: 150px;
+  text-align: center;
+  line-height: 20px;
+  h1 {
+    margin: 0px;
+    color: rgb(255, 31, 0);
+
+    font-family: 'Codystar', cursive;
+    font-size: 75px;
+    position: relative;
+    top: 32px;
+  }
+}
+
+.strokeme
+{
+  color: white;
+  text-shadow:
+  -1px -1px 0 gold,
+  1px -1px 0 gold,
+  -1px 1px 0 gold,
+  1px 1px 0 gold;
+}
+
+h1, h3, h2 {
+  font-family: 'Limelight', cursive;
+}
+
+.row {
+  background: gold;
+  font-family: 'junction regular';
+}
+
+body {
+  background: rgb(255, 31, 0);
+}
+
+#movie_title {
+  font-size: 25px;
+  color: rgb(255, 31, 0);
+}

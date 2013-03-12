@@ -1,0 +1,18 @@
+.row
+  .small-12.columns
+    %h1 This is Movie Pong 2.0
+.row
+  .small-8.small-centered.columns
+    %h3 Explanation:
+    %p The computer will generate some movies for you to begin with. Press the "new start movie" button until you find one you feeel confident about, enter an actor in that movie, and press "enter." The objective is to know more actors and movies than the computer (hey! It could happen!) and when you guess incorrectly, you get a letter. If you spell "PONG," you lose!
+    %h3 Rules:
+    %ul#rule_list
+      %li No movie or actor can be repreated within a single game
+      %li Spelling errors will not be accepted (use google to spellcheck if you must, but no cheating!)
+      %li No Cheating!</li>
+.row
+  .small-2.small-centered.columns
+    -if @current_user.present?
+      =link_to("New Game", games_path, :method => :post, :class => "button radius")
+    -else
+      =link_to("New Game", games_path, :method => :post, :class => "button radius disabled")

@@ -1,0 +1,8 @@
+development:
+  adapter: postgresql
+  encoding: unicode
+  database: v2_movie_pong_development
+  pool: 5
+  host: localhost
+  username: janesternbach
+  password:
