@@ -13,6 +13,6 @@
 .row
   .small-2.small-centered.columns
     -if @current_user.present?
-      =link_to("New Game", games_path, :method => :post, :class => "button radius")
+      =link_to("New Game", games_path, :method => :post, :class => "button radius", :id => "start_game_btn")
     -else
       =link_to("New Game", games_path, :method => :post, :class => "button radius disabled")

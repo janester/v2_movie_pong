@@ -1,7 +1,7 @@
 $(function(){
   $("#new_movie_btn").click(change_start_movie);
   $("#entered_actor_btn").click(get_entered_info);
-  get_start_movies();
+  $("#start_game_btn").click(get_start_movies);
   hide_scoreboard();
   $('body').on("click", "#myModal", close_modal);
 });
