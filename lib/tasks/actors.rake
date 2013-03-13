@@ -7,4 +7,12 @@ namespace "mp" do
       end
     end
   end
+  desc "Removes not yet released Movies from db"
+  task :remove_movies => :environment do
+    Movie.all.each do |movie|
+      if movie.year > 2013
+        Movie.delete(movie.id)
+      end
+    end
+  end
 end
