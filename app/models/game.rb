@@ -19,29 +19,37 @@ class Game < ActiveRecord::Base
   has_and_belongs_to_many :actors
 
 
-
-  def is_actor_in_movie(actor, movie_id)
-    #check if movie exists, if not, get it, add it, and add whole cast
-    if Movie.exists?(:tmdb_id => movie_id)
-      movie = Movie.where(:tmdb_id => movie_id).first
-      self.movies << movie
-      cast = movie.actors
-    else
-      m = Movie.get_from_internet_and_add(movie)
-      movie = m[:movie]
-      self.movies << movie
-      cast = m[:cast]
-    end
-    #increment times said
-    movie.times_said += 1
-    movie.save
-    #check if actor is in the movie and return actor_id if so
+  def Game.is_actor_in_movie(actor, cast)
     if cast.map(&:name).include?(actor)
       index = cast.map(&:name).index(actor)
-      actor_id = cast[index].tmdb_id
+      return actor_id = cast[index].tmdb_id
     else
-      actor_id = nil
+      return actor_id = nil
     end
+  end
+
+  def actor_check(actor, movie_id)
+    if Movie.exists?(:tmdb_id => movie_id)
+      movie = Movie.where(:tmdb_id => movie_id).first
+      cast = movie.actors
+      a_id = Game.is_actor_in_movie(actor, cast)
+      if a_id.present?
+        actor_id = a_id
+      else
+        m = Movie.get_from_internet_and_add_cast_actors(movie_id)
+        movie = m[:movie]
+        cast = m[:cast]
+        actor_id = Game.is_actor_in_movie(actor, cast)
+      end
+    else
+      m = Movie.get_from_internet_and_add_cast_actors(movie_id)
+      movie = m[:movie]
+      cast = m[:cast]
+      actor_id = Game.is_actor_in_movie(actor, cast)
+    end
+    self.movies << movie
+    movie.times_said += 1
+    movie.save
     return actor_id
   end
 
@@ -60,9 +68,9 @@ class Game < ActiveRecord::Base
       a = Actor.get_from_internet_and_filmography(actor.tmdb_id)
     end
     movies = actor.movies.order("times_said DESC").order("tmdb_popularity DESC")
-    new_movies = movies[0,2]
-    new_movies << movies.sample
-    new_movies = new_movies.shuffle
+    new_movies = movies[0,3].shuffle
+    # new_movies << movies.sample
+    # new_movies = new_movies.shuffle
     new_movies.reject!{|x| self.movies.include?(x)}
     if movies.length == 0
       return nil

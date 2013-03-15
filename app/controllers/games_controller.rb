@@ -12,7 +12,7 @@ class GamesController < ApplicationController
     movie = params[:movie].to_i
     actor = params[:actor]
     game = Game.find(params[:id])
-    actor_id = game.is_actor_in_movie(actor, movie)
+    actor_id = game.actor_check(actor, movie)
     if actor_id.present?
       if game.actor_has_been_said?(actor_id)
         game.scores << Score.create(:player => 1)
