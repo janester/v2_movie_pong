@@ -4,7 +4,7 @@ Have you ever played movie pong on a long road trip? You know, the one where you
 
 A couple of notes:
 1. All names need to be spelled and capitalized correctly:
- * Example: "leonardo dicaprio" will no work. You need to write "Leonardo DiCaprio" (notice the capital L and D AND C)
+- Example: "leonardo dicaprio" will no work. You need to write "Leonardo DiCaprio" (notice the capital L and D AND C)
 2. Getting points is a bad thing! The first person to get 4 points loses
 3. This is written using RoR 3.2
 
