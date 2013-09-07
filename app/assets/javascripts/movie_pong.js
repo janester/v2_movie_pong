@@ -1,6 +1,7 @@
 $(function(){
   $("#new_movie_btn").click(change_start_movie);
   $("#entered_actor_btn").click(get_entered_info);
+  $("#start_game_btn_disabled").click(function(){ alert("You Must Be Logged In to Play");});
   get_start_movies();
   hide_scoreboard();
   $('body').on("click", "#myModal", close_modal);
@@ -10,6 +11,7 @@ var start_movies = [];
 var computer_score = 0;
 var player_score = 0;
 var i = 1;
+var actors = [];
 // MODALS***********************************************
 function show_modal()
 {
@@ -36,9 +38,13 @@ function get_start_movies()
   return false;
 }
 
-function update_start_movies(movies)
+function update_start_movies(info)
 {
-  start_movies = movies;
+  start_movies = info.movies;
+  actors = info.actors;
+  $('input#entered_actor').autocomplete({
+    source: actors
+  });
   change_start_movie();
 }
 
@@ -51,7 +57,7 @@ function change_start_movie()
   }
   else
   {
-    $("#movie_title").text(movie.title);
+    $("#movie_title").text(movie.title +" ("+movie.year+")");
     $("#movie_tmdb").text(movie.tmdb_id += "");
   }
 

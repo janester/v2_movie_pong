@@ -1,6 +1,9 @@
 @import url(http://fonts.googleapis.com/css?family=Codystar);
 @import url(http://fonts.googleapis.com/css?family=Graduate);
 @import url(http://fonts.googleapis.com/css?family=Limelight);
+@import url(http://fonts.googleapis.com/css?family=Carrois+Gothic);
+@import url(http://fonts.googleapis.com/css?family=Fresca);
+@import url(http://fonts.googleapis.com/css?family=Ruda);
 #play_container {
   text-align: center;
 }
@@ -78,6 +81,11 @@
   }
 }
 
+a#home-link #home-link-img{
+  height: 100%;
+  width:  45px;
+}
+
 .strokeme
 {
   color: white;
@@ -94,7 +102,7 @@ h1, h3, h2 {
 
 .row {
   background: gold;
-  font-family: 'junction regular';
+  font-family: 'Ruda', sans-serif;
 }
 
 body {
@@ -104,4 +112,8 @@ body {
 #movie_title {
   font-size: 25px;
   color: rgb(255, 31, 0);
+}
+
+.ui-menu-item {
+  font-family: 'Ruda', sans-serif;
 }

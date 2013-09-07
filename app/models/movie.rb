@@ -86,7 +86,7 @@ class Movie < ActiveRecord::Base
       if Actor.exists?(:tmdb_id => actor.id)
         actor_obj = Actor.where(:tmdb_id => actor.id).first
       else
-        actor_obj = Actor.create(:name => actor.name, :tmdb_id => actor.id)
+        actor_obj = Actor.create(:name => actor.name.downcase, :tmdb_id => actor.id)
       end
       movie.actors << actor_obj unless movie.actors.include?(actor_obj)
     end

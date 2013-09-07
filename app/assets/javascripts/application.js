@@ -19,5 +19,6 @@
 //= require 'morris/morris.min.js'
 //= require 'underscore-min.js'
 //= require 'spin.js'
+//= require 'jquery-ui-1.10.3.custom.min.js'
 //= require 'movie_pong'
 

@@ -10,7 +10,7 @@ class GamesController < ApplicationController
 
   def play
     movie = params[:movie].to_i
-    actor = params[:actor]
+    actor = params[:actor].downcase
     game = Game.find(params[:id])
     actor_id = game.actor_check(actor, movie)
     if actor_id.present?
@@ -33,7 +33,7 @@ class GamesController < ApplicationController
         message = "Sorry! You got a point!"
       else
         movie = Movie.where(:tmdb_id => movie).first.title
-        message = "Sorry! #{actor} wasn't in #{movie}"
+        message = "Sorry! #{actor.titleize} wasn't in #{movie}"
       end
       game.scores << Score.create(:player => 1)
       render :json => {scores:game.scores, message:message}
@@ -50,6 +50,6 @@ class GamesController < ApplicationController
     movies = Movie.order("times_said DESC").order("tmdb_popularity DESC")
     movies = movies.reject{|movie| game.movies.include?(movie)}
     movies = movies[0,20].shuffle
-    render :json => movies
+    render :json => {movies:movies, actors:Actor.all.map{|x| x.name.titleize}}
   end
 end
