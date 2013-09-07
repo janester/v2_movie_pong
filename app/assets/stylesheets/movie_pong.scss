@@ -1,9 +1,3 @@
-@import url(http://fonts.googleapis.com/css?family=Codystar);
-@import url(http://fonts.googleapis.com/css?family=Graduate);
-@import url(http://fonts.googleapis.com/css?family=Limelight);
-@import url(http://fonts.googleapis.com/css?family=Carrois+Gothic);
-@import url(http://fonts.googleapis.com/css?family=Fresca);
-@import url(http://fonts.googleapis.com/css?family=Ruda);
 #play_container {
   text-align: center;
 }
@@ -116,4 +110,9 @@ body {
 
 .ui-menu-item {
   font-family: 'Ruda', sans-serif;
+}
+
+.top-bar-section li a:not(.button) {
+  font-family: 'Ruda', sans-serif;
+  font-weight: 900;
 }
