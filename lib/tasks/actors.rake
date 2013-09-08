@@ -15,4 +15,12 @@ namespace "mp" do
       end
     end
   end
+  desc "ping site"
+  task :ping_site => :environment do
+    if (Time.now.hour < 23) && (Time.now.hour > 9)
+      uri = URI.parse('http://barcodenyc.herokuapp.com/')
+      Net::HTTP.get(uri)
+      puts "Barcode has been pinged..."
+    end
+  end
 end
