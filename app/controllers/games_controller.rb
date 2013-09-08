@@ -50,6 +50,6 @@ class GamesController < ApplicationController
     movies = Movie.order("times_said DESC").order("tmdb_popularity DESC")
     movies = movies.reject{|movie| game.movies.include?(movie)}
     movies = movies[0,20].shuffle
-    render :json => {movies:movies, actors:Actor.all.map{|x| x.name.titleize}}
+    render :json => {movies:movies, actors:Actor.all.map{|x| x.name}}
   end
 end
