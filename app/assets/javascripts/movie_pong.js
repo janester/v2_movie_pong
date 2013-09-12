@@ -29,13 +29,15 @@ function close_modal()
 // START MOVIES*****************************************
 function get_start_movies()
 {
-  var game_id = $("#game").text();
-  $.ajax({
-  dataType: 'json',
-  type: "get",
-  url: "/games/"+game_id+"/get_info"
-  }).done(update_start_movies);
-  return false;
+  if ($("#entered_actor_btn").length > 0) {
+    var game_id = $("#game").text();
+    $.ajax({
+    dataType: 'json',
+    type: "get",
+    url: "/games/"+game_id+"/get_info"
+    }).done(update_start_movies);
+    return false;
+  }
 }
 
 function update_start_movies(info)
