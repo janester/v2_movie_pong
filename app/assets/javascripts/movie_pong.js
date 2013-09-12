@@ -4,7 +4,8 @@ $(function(){
   $("#start_game_btn_disabled").click(function(){ alert("You Must Be Logged In to Play");});
   get_start_movies();
   hide_scoreboard();
-  $('body').on("click", "#myModal", close_modal);
+  $("body").on("click", ".reveal-modal-bg", close_modal);
+  // $('body').on("click", "#myModal", close_modal);
 });
 
 var start_movies = [];
@@ -43,11 +44,16 @@ function get_start_movies()
 function update_start_movies(info)
 {
   start_movies = info.movies;
-  actors = info.actors;
+  update_actor_autocomplete(info.actors);
+  change_start_movie();
+}
+
+function update_actor_autocomplete(array) {
+  actors.push(array);
+  actors = _.uniq(_.compact(_.flatten(actors)));
   $('input#entered_actor').autocomplete({
     source: actors
   });
-  change_start_movie();
 }
 
 function change_start_movie()
@@ -94,6 +100,9 @@ function hide_start_stuff()
 
 function update_page(message)
 {
+  if (message.actors != undefined) {
+    update_actor_autocomplete(message.actors);
+  }
   hide_start_stuff();
   $("#spinner").empty();
   console.log(message);
@@ -103,9 +112,10 @@ function update_page(message)
   }
   else
   {
-    $("#movie_title").text(message.movie.title);
+    var movie_string = message.movie.title+" ("+message.movie.year+")";
+    $("#movie_title").text(movie_string);
     $("#movie_tmdb").text(message.movie.tmdb_id+="");
-    $("#entered_actor").val("");
+    $("#entered_actor").val("").focus();
   }
 
 }
@@ -123,6 +133,7 @@ function update_score(message)
   var last = _.last(message.scores);
   if(player_score === 4)
   {
+    $("body").off("click", ".reveal-modal-bg", close_modal);
     $("#modalText").text("Sorry! You just got ponged");
     show_modal();
     $("#modalScoreboard").children().children().first().children().text(computer_score);

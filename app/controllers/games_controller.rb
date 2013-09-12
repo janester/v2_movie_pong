@@ -24,7 +24,9 @@ class GamesController < ApplicationController
           game.scores << Score.create(:computer => 1)
           render :json => {scores:game.scores, message:"Congrats! You beat me this round! I couldn't find any movies that #{actor.name} has been in that haven't already been said."}
         else
-          render :json => {movie:movie, scores:game.scores}
+          actors = Actor.where("id BETWEEN #{session[:last_actor]+1} AND #{Actor.last.id}").map(&:name)
+          session[:last_actor] = Actor.last.id
+          render :json => {movie:movie, scores:game.scores, actors:actors}
         end
 
       end
@@ -50,6 +52,7 @@ class GamesController < ApplicationController
     movies = Movie.order("times_said DESC").order("tmdb_popularity DESC")
     movies = movies.reject{|movie| game.movies.include?(movie)}
     movies = movies[0,20].shuffle
+    session[:last_actor] = Actor.last.id
     render :json => {movies:movies, actors:Actor.all.map{|x| x.name}}
   end
 end
