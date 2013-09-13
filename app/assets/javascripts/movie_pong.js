@@ -87,6 +87,12 @@ function get_entered_info()
   dataType: 'json',
   type: "post",
   url: "/games/"+game_id+"/play",
+  error: function(error){
+    $("#spinner").empty();
+    console.log(error);
+    alert("Sorry Something Went Wrong...");
+    location.reload();
+  },
   data: {movie:movie, actor:actor, game_id:game_id}
   }).done(update_page);
   spin_init();

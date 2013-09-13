@@ -9,7 +9,9 @@ gem 'bcrypt-ruby'
 gem 'activesupport'
 gem 'ruby-tmdb'
 gem 'httparty'
-gem 'textacular', '~> 3.0', require: 'textacular/rails'
+# gem 'textacular', '~> 3.0', require: 'textacular/rails'
+
+gem "unicorn"
 
 
 
