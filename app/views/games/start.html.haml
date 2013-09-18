@@ -1,6 +1,6 @@
 .row
   .large-4.large-offset-2.columns
-    %h2#round_count Round #1
+    %h2#round_count= "Round ##{session[:round]}"
 .row
   .large-7.large-centered.columns#play_container
     %h3 Enter an Actor in:

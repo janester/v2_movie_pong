@@ -5,6 +5,7 @@ class GamesController < ApplicationController
   def create
     game = Game.create
     @current_user.games << game
+    session[:round] = 1
     redirect_to(start_game_path(game.id))
   end
 
@@ -16,12 +17,14 @@ class GamesController < ApplicationController
     if actor_id.present?
       if game.actor_has_been_said?(actor_id)
         game.scores << Score.create(:player => 1)
-        render :json => {scores:game.scores, message:"Sorry! #{actor} was already said."}
+        session[:round] +=1
+        render :json => {scores:game.scores, message:"Sorry! #{actor.titleize} was already said."}
       else
         actor = game.add_actor(actor_id)
         movie = game.find_movie(actor)
         if movie.nil?
           game.scores << Score.create(:computer => 1)
+          session[:round] +=1
           render :json => {scores:game.scores, message:"Congrats! You beat me this round! I couldn't find any movies that #{actor.name} has been in that haven't already been said."}
         else
           actors = Actor.where("id BETWEEN #{session[:last_actor]+1} AND #{Actor.last.id}").map(&:name)
@@ -30,6 +33,7 @@ class GamesController < ApplicationController
         end
       end
     else
+      session[:round] +=1
       if actor == ""
         message = "Sorry! You got a point!"
       else

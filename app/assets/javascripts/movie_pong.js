@@ -3,7 +3,6 @@ $(function(){
   $("#entered_actor_btn").click(get_entered_info);
   $("#start_game_btn_disabled").click(function(){ alert("You Must Be Logged In to Play");});
   get_start_movies();
-  // hide_scoreboard();
   $("body").on("click", ".reveal-modal-bg", close_modal);
   // $('body').on("click", "#myModal", close_modal);
 });
@@ -77,10 +76,6 @@ function change_start_movie()
     $("#movie_tmdb").text(movie.tmdb_id += "");
   }
 
-}
-function hide_scoreboard()
-{
-  $("#pageScoreboard").hide();
 }
 // START MOVIES*****************************************
 
@@ -194,7 +189,7 @@ function update_score(message)
 
 function update_page_score()
 {
-  $("#pageScoreboard").show();
+  $("#pageScoreboard").removeClass("hide");
   $("#pageScoreboard").children().first().children().text(computer_score);
   $("#pageScoreboard").children().last().children().text(player_score);
   show_start_stuff();
