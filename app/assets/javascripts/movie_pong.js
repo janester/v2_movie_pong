@@ -1,9 +1,9 @@
 $(function(){
-  $("#new_movie_btn").click(change_start_movie);
+  $("#new_movie_btn").click(precurse_change_start_movie);
   $("#entered_actor_btn").click(get_entered_info);
   $("#start_game_btn_disabled").click(function(){ alert("You Must Be Logged In to Play");});
   get_start_movies();
-  hide_scoreboard();
+  // hide_scoreboard();
   $("body").on("click", ".reveal-modal-bg", close_modal);
   // $('body').on("click", "#myModal", close_modal);
 });
@@ -28,6 +28,14 @@ function close_modal()
 // MODALS***********************************************
 
 // START MOVIES*****************************************
+
+//probably a better solution to this
+function precurse_change_start_movie(e){
+  e.preventDefault();
+  change_start_movie();
+}
+
+
 function get_start_movies()
 {
   if ($("#entered_actor_btn").length > 0) {
@@ -77,8 +85,9 @@ function hide_scoreboard()
 // START MOVIES*****************************************
 
 // PLAY*************************************************
-function get_entered_info()
+function get_entered_info(e)
 {
+  e.preventDefault();
   var movie = $("#movie_tmdb").text();
   var actor = $("#entered_actor").val();
   var game_id = $("#game").text();
@@ -128,6 +137,33 @@ function update_page(message)
 // PLAY*************************************************
 
 // NEW ROUND********************************************
+function show_modal_with_text(text, show){
+
+  if ($("html").hasClass("touch")) {
+    alert(text);
+    if (show) {
+      window.location = $("#play_again_btn").attr("href");
+    }
+    else {
+      update_page_score();
+    }
+  }
+  else {
+    if (show) {
+      $("body").on("click", ".reveal-modal-bg", function(){window.location = $("#play_again_btn").attr("href");});
+      $("#play_again_btn").show();
+    }
+    else {
+      $("#play_again_btn").hide();
+    }
+    $("#modalText").text(text);
+    show_modal();
+    $("#modalScoreboard").children().children().first().children().text(computer_score);
+    $("#modalScoreboard").children().children().last().children().text(player_score);
+  }
+
+}
+
 function update_score(message)
 {
   i += 1;
@@ -139,39 +175,19 @@ function update_score(message)
   var last = _.last(message.scores);
   if(player_score === 4)
   {
-    $("body").on("click", ".reveal-modal-bg", function(){window.location = $("#play_again_btn").attr("href");});
-    $("#modalText").text("Sorry! You just got ponged");
-    show_modal();
-    $("#modalScoreboard").children().children().first().children().text(computer_score);
-    $("#modalScoreboard").children().children().last().children().text(player_score);
-    $("#play_again_btn").show();
-
+    show_modal_with_text("Sorry! You just got ponged", true);
   }
   else if(computer_score === 4)
   {
-    $("#modalText").text("Woah. You're Smarter than a Computer.");
-    show_modal();
-    $("#modalScoreboard").children().children().first().children().text(computer_score);
-    $("#modalScoreboard").children().children().last().children().text(player_score);
-    $("#play_again_btn").show();
-
+    show_modal_with_text("Woah. You're Smarter than a Computer.", true);
   }
   else if(last.computer === 0)
   {
-    $("#modalText").text(message.message);
-    show_modal();
-    $("#modalScoreboard").children().children().first().children().text(computer_score);
-    $("#modalScoreboard").children().children().last().children().text(player_score);
-    $("#play_again_btn").hide();
+    show_modal_with_text(message.message, false);
   }
   else
   {
-    $("#modalText").text(message.message);
-    show_modal();
-    $("#modalScoreboard").children().children().first().children().text(computer_score);
-    $("#modalScoreboard").children().children().last().children().text(player_score);
-    $("#play_again_btn").hide();
-
+    show_modal_with_text(message.message, false);
   }
 }
 

@@ -43,6 +43,12 @@ class GamesController < ApplicationController
 
   def start
     @game = Game.find(params[:id])
+    unless @game.scores.empty?
+      @p = @c = 0
+      @game.scores.each do |score|
+        score.computer == 0 ? @p +=1 : @c +=1
+      end
+    end
   end
 
   def get_info
