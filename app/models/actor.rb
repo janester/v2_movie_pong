@@ -15,53 +15,24 @@ class Actor < ActiveRecord::Base
   has_and_belongs_to_many :movies
   has_and_belongs_to_many :games
   validates :tmdb_id, :uniqueness => true
+  # validates :tmdb_id, :name, :presence => true
 
   def Actor.get_from_internet_and_filmography(actor_id)
-    #get actor from internet
-    actor_blob = Actor.get_info(actor_id)
-    #make actor if not yet existing
-    actor_hash = Actor.add_actor(actor_id, actor_blob)
-    actor = actor_hash[:actor]
-    filmography = actor_hash[:films]
-    #got through filmography making movies
-    films = Actor.add_filmography_films(filmography)
-    act = {}
-    act[:actor] = actor
-    act[:films] = films
-    return act
+    actor = Actor.find_or_initialize_by_tmdb_id(actor_id)
+    if actor.name.nil?
+      results = Tmdb::People.detail(actor_id)
+      actor.update_attributes(name:results.name)
+    end
+    actor.add_filmography_films
   end
 
-  def Actor.get_info(actor_id)
-    begin
-      actor = HTTParty.get("http://api.themoviedb.org/2.1/Person.getInfo/en/json/#{TMDB}/#{actor_id}")
-    rescue
-      retry
-    end
-    return actor
-  end
 
-  def Actor.add_actor(actor_id, actor_blob)
-    if Actor.exists?(:tmdb_id => actor_id)
-      actor = Actor.where(:tmdb_id => actor_id).first
-    else
-      name = actor_blob[0]["name"]
-      tmdb_id = actor_blob[0]["id"]
-      actor = Actor.create(:name => name, :tmdb_id => tmdb_id)
-    end
-    filmography = actor_blob[0]["filmography"]
-    a = {}
-    a[:actor] = actor
-    a[:films] = filmography
-    return a
-  end
 
-  def Actor.add_filmography_films(filmography)
-    films = []
-    filmography.each do |movie|
-      m = Movie.get_from_internet_and_add_cast_actors(movie["id"])
-      films << m[:movie] if m.present?
+  def add_filmography_films
+    film_results = Tmdb::People.credits(self.tmdb_id)["cast"]
+    film_results.each do |movie|
+      Movie.get_from_internet_and_add_cast_actors(movie["id"])
     end
-    return films
   end
 
 end

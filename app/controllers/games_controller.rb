@@ -28,7 +28,6 @@ class GamesController < ApplicationController
           session[:last_actor] = Actor.last.id
           render :json => {movie:movie, scores:game.scores, actors:actors}
         end
-
       end
     else
       if actor == ""
@@ -40,7 +39,6 @@ class GamesController < ApplicationController
       game.scores << Score.create(:player => 1)
       render :json => {scores:game.scores, message:message}
     end
-
   end
 
   def start

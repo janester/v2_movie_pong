@@ -1,19 +1,23 @@
 <nav class="top-bar">
+  <ul class="title-area">
+    <!-- Title Area -->
+    <li class="name">
+    </li>
+    <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+    <li class="toggle-topbar menu-icon"><a href="#"><span>Menu</span></a></li>
+  </ul>
+
   <section class="top-bar-section">
     <!-- Left Nav Section -->
     <ul class="left">
-      <li>
-        <a href="/" id="home-link">
-          <img alt="Home-white" src="/assets/HouseWhite.png" id="home-link-img">
-        </a>
-      </li>
+      <li><a href="/" id="home-link"><img alt="Home-white" src="/assets/HouseWhite.png" id="home-link-img"></a></li>
       <li class="divider"></li>
     </ul>
 
     <!-- Right Nav Section -->
     <ul class="right">
-      <li class="divider hide-for-small"></li>
-      <%== intellinav %>
+      <li class="divider hide-for-large-down"></li>
+      <%== intellinav  %>
     </ul>
   </section>
 </nav>

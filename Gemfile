@@ -7,8 +7,9 @@ gem 'jquery-rails'
 gem 'haml'
 gem 'bcrypt-ruby'
 gem 'activesupport'
-gem 'ruby-tmdb'
+# gem 'ruby-tmdb'
 gem 'httparty'
+gem 'themoviedb'
 # gem 'textacular', '~> 3.0', require: 'textacular/rails'
 
 gem "unicorn"

@@ -18,77 +18,39 @@ class Movie < ActiveRecord::Base
   has_and_belongs_to_many :games
   validates :tmdb_id, :uniqueness => true
 
+
   def Movie.get_from_internet_and_add_cast_actors(movie_id)
-    #get movie
-    movie_obj = Movie.get_movie(movie_id)
-    #make movie object if it doesn't yet exist
-    movie_hash = Movie.add_movie(movie_id, movie_obj)
-    if movie_hash.present?
-      movie = movie_hash[:movie]
-      cast = movie_hash[:cast]
-      #go through cast making objects (if not yet existing) and making relationships(if not yet existing)
-      Movie.add_cast(movie, cast)
-      movie.actors = movie.actors.uniq
-      mov = {}
-      mov[:movie] = movie
-      mov[:cast] = movie.actors
-      return mov
+    #find movie in db by tmdb_id
+    movie = Movie.find_or_initialize_by_tmdb_id(movie_id)
+    #call api (mostly to update popularity)
+    results = Tmdb::Movie.detail(movie_id)
+    if results.popularity > 2
+      #update movie information
+      movie.update_attributes(title:results.title, year:results.release_date[0...4], tmdb_popularity:results.popularity)
+      #make sure the cast isn't already added
+      movie.add_cast if movie.actors.length < 5
+      return movie
     else
       return nil
     end
   end
 
-  def Movie.get_movie(movie_id)
-    begin
-      movie = TmdbMovie.find(:id => movie_id)
-    rescue
-      retry
-    end
-    return movie
-  end
-
-  def Movie.add_movie(movie_id, movie_obj)
-    movie = movie_obj
-    if movie.length.nil?
-      cast = movie.cast.select {|i| i.job == "Actor"}
-      a = movie.name
-      b = movie.released[0,4] if movie.released.present?
-      c = movie.id
-      d = movie.popularity
-    else
-      cast = movie[0].cast.select {|i| i.job == "Actor"}
-      a = movie[0].name
-      b = movie[0].released[0,4] if movie[0].released.present?
-      c = movie[0].id
-      d = movie[0].popularity
-    end
-    if Movie.exists?(:tmdb_id => movie_id)
-
-      m = {}
-      m[:movie] = Movie.where(:tmdb_id => movie_id).first
-      m[:cast] = cast
-      return m
-    else
-      if d > 2 && b.present?
-        new_movie = Movie.create(:title => a, :year => b, :tmdb_id => c, :tmdb_popularity => d)
-        m = {}
-        m[:movie] = new_movie
-        m[:cast] = cast
-        return m
-      else
-        return nil
+  def add_cast
+    #api call to get the cast
+    cast_results = Tmdb::Movie.casts(self.tmdb_id)
+    #only go the db once to get the actors
+    movie_actors = self.actors
+    cast_results.each do |actor|
+      #downcase name to make sure all input is sanitized
+      name = actor["name"].downcase
+      #find actor in the db by tmdb_id
+      a = Actor.find_or_initialize_by_tmdb_id(actor["id"])
+      #update actor info if there isn't any
+      a.update_attributes(name:name) if a.name.nil?
+      unless movie_actors.include?(a)
+        #add the actor to the array of actors for this movie
+        self.actors << a
       end
-    end
-  end
-
-  def Movie.add_cast(movie, cast)
-    cast.each do |actor|
-      if Actor.exists?(:tmdb_id => actor.id)
-        actor_obj = Actor.where(:tmdb_id => actor.id).first
-      else
-        actor_obj = Actor.create(:name => actor.name.downcase, :tmdb_id => actor.id)
-      end
-      movie.actors << actor_obj unless movie.actors.include?(actor_obj)
     end
   end
 

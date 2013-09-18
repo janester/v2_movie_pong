@@ -1,0 +1,18 @@
+@media screen and (max-width:768px) {
+  #header h1 {
+    font-size: 39px;
+    line-height: 115px;
+  }
+
+  h1, h3, #index #start_game_btn_disabled, #index #start_game_btn{
+    text-align: center;
+    width: 100%;
+  }
+  input[type='text'],input[type='number'],textarea, input[type='password']{
+    font-size:16px;
+  }
+
+  .button {
+    width: 100%;
+  }
+}

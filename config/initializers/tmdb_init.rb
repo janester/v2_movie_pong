@@ -1,3 +1,2 @@
-Tmdb.api_key = ENV["TMDB_KEY"]
-Tmdb.default_language = "en"
+Tmdb::Api.key(ENV["TMDB_KEY"])
 TMDB = ENV["TMDB_KEY"]

@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>V2MoviePong</title>
+  <title>Movie Pong</title>
   <%= stylesheet_link_tag    "application", :media => "all" %>
   <%= javascript_include_tag "application" %>
   <link href='http://fonts.googleapis.com/css?family=Codystar|Limelight|Graduate|Ruda:400,700,900' rel='stylesheet' type='text/css'>
   <%= csrf_meta_tags %>
+<!--   <meta content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0" name="viewport" /> -->
+  <meta name="viewport" content="width=device-width" user-scalable="no"/>
+
   <%= favicon_link_tag 'movie.ico' %>
 </head>
 <body>
@@ -21,5 +24,8 @@
 
   </div>
   <%= render :partial => 'layouts/ga' if Rails.env == 'production' %>
+  <script type="text/javascript">
+    $(document).foundation();
+  </script>
 </body>
 </html>
