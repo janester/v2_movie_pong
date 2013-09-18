@@ -22,36 +22,15 @@ class Game < ActiveRecord::Base
   def Game.is_actor_in_movie(actor, cast)
     if cast.map(&:name).include?(actor)
       index = cast.map(&:name).index(actor)
+      puts "#{actor} IS in the movie...".background(:black).foreground(:red).underline
       return cast[index].tmdb_id
     else
+      puts "#{actor} IS NOT in the movie".background(:black).foreground(:red).underline
       return nil
     end
-  end
+  end #is_actor_in_movie
 
   def actor_check(actor, movie_id)
-    # if Movie.exists?(:tmdb_id => movie_id)
-    #   movie = Movie.where(:tmdb_id => movie_id).first
-    #   cast = movie.actors
-    #   a_id = Game.is_actor_in_movie(actor, cast)
-    #   if a_id.present?
-    #     actor_id = a_id
-    #   else
-    #     m = Movie.get_from_internet_and_add_cast_actors(movie_id)
-    #     movie = m[:movie]
-    #     cast = m[:cast]
-    #     actor_id = Game.is_actor_in_movie(actor, cast)
-    #   end
-    # else
-    #   m = Movie.get_from_internet_and_add_cast_actors(movie_id)
-    #   movie = m[:movie]
-    #   cast = m[:cast]
-    #   actor_id = Game.is_actor_in_movie(actor, cast)
-    # end
-    # self.movies << movie
-    # movie.times_said += 1
-    # movie.save
-    # return actor_id
-
     movie = Movie.where(:tmdb_id => movie_id).first
     if movie.nil?
       movie = Movie.get_from_internet_and_add_cast_actors(movie_id)
@@ -62,17 +41,17 @@ class Game < ActiveRecord::Base
     movie.save
     self.movies << movie
     return actor_id
-  end
+  end #actor_check
 
   def actor_has_been_said?(actor_id)
     self.actors.map(&:tmdb_id).include?(actor_id)
-  end
+  end #actor_has_been_said?
 
   def add_actor(actor_id)
     a = Actor.find_by_tmdb_id(actor_id)
     self.actors << a
     return a
-  end
+  end #add_actor
 
   def find_movie(actor)
     if actor.movies.length < 3
@@ -80,17 +59,16 @@ class Game < ActiveRecord::Base
     end
     movies = actor.movies.order("times_said DESC").order("tmdb_popularity DESC")
     new_movies = movies[0,3].shuffle
-    # new_movies << movies.sample
-    # new_movies = new_movies.shuffle
     m = self.movies
     new_movies.reject!{|x| m.include?(x)}
+    puts "Possible movies to respond with: #{new_movies.map(&:title).join(", ")}".background(:black).foreground(:red).underline
     if new_movies.length == 0
       return nil
     else
       return new_movies[0]
     end
-  end
+  end #find_movie
 
 
 
-end
+end #model

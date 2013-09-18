@@ -29,6 +29,7 @@ class Movie < ActiveRecord::Base
       movie.update_attributes(title:results.title, year:results.release_date[0...4], tmdb_popularity:results.popularity)
       #make sure the cast isn't already added
       movie.add_cast if movie.actors.length < 5
+      puts "#{movie.title} and actors have been added".background(:black).foreground(:red).underline
       return movie
     else
       return nil
@@ -36,6 +37,7 @@ class Movie < ActiveRecord::Base
   end
 
   def add_cast
+    puts "adding cast to #{self.title}...".background(:black).foreground(:red).underline
     #api call to get the cast
     cast_results = Tmdb::Movie.casts(self.tmdb_id)
     #only go the db once to get the actors
@@ -49,6 +51,7 @@ class Movie < ActiveRecord::Base
       a.update_attributes(name:name) if a.name.nil?
       unless movie_actors.include?(a)
         #add the actor to the array of actors for this movie
+        puts "#{name} is being added to #{self.title}".background(:black).foreground(:red).underline
         self.actors << a
       end
     end

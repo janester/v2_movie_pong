@@ -139,7 +139,7 @@ function update_score(message)
   var last = _.last(message.scores);
   if(player_score === 4)
   {
-    $("body").off("click", ".reveal-modal-bg", close_modal);
+    $("body").on("click", ".reveal-modal-bg", function(){window.location = $("#play_again_btn").attr("href");});
     $("#modalText").text("Sorry! You just got ponged");
     show_modal();
     $("#modalScoreboard").children().children().first().children().text(computer_score);

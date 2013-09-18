@@ -13,6 +13,7 @@ gem 'themoviedb'
 # gem 'textacular', '~> 3.0', require: 'textacular/rails'
 
 gem "unicorn"
+gem "rainbow"
 
 
 

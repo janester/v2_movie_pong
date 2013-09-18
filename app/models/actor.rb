@@ -24,6 +24,7 @@ class Actor < ActiveRecord::Base
       actor.update_attributes(name:results.name)
     end
     actor.add_filmography_films
+    puts "#{actor.name} and films have been added...".background(:black).foreground(:red).underline
   end
 
 
