@@ -38,6 +38,7 @@ function precurse_change_start_movie(e){
 function get_start_movies()
 {
   if ($("#entered_actor_btn").length > 0) {
+    spin_init();
     var game_id = $("#game").text();
     $.ajax({
     dataType: 'json',
@@ -65,6 +66,7 @@ function update_actor_autocomplete(array) {
 
 function change_start_movie()
 {
+  $("#spinner").empty();
   var movie = start_movies.shift();
   if(movie === undefined)
   {
@@ -215,15 +217,15 @@ function update_round_count()
 function spin_init()
 {
   var opts = {
-  lines: 13, // The number of lines to draw
-  length: 7, // The length of each line
-  width: 4, // The line thickness
-  radius: 10, // The radius of the inner circle
-  corners: 1, // Corner roundness (0..1)
+  lines: 9, // The number of lines to draw
+  length: 21, // The length of each line
+  width: 5, // The line thickness
+  radius: 24, // The radius of the inner circle
+  corners: 0.6, // Corner roundness (0..1)
   rotate: 0, // The rotation offset
   color: '#FF1F00', // #rgb or #rrggbb
   speed: 1, // Rounds per second
-  trail: 60, // Afterglow percentage
+  trail: 50, // Afterglow percentage
   shadow: false, // Whether to render a shadow
   hwaccel: false, // Whether to use hardware acceleration
   className: 'spinner', // The CSS class to assign to the spinner
