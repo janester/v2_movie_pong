@@ -16,7 +16,7 @@ html {
 .scoreboard {
   font-family: 'Graduate', cursive;
   font-size: 28px;
-  width: 270px;
+  max-width: 270px;
   color: gold;
   height: 305px;
   background: red;
@@ -127,4 +127,8 @@ body {
 .top-bar-section li a:not(.button) {
   font-family: 'Ruda', sans-serif;
   font-weight: 900;
+}
+
+.button {
+  margin: auto;
 }

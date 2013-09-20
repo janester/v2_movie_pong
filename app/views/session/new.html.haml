@@ -3,6 +3,8 @@
     %h1 Login to Movie Pong
 .row
   .large-4.large-centered.columns
+    -unless flash[:notice].nil?
+      %p.alert-box.radius= flash[:notice]
     =form_tag '/login' do
       =label_tag 'username'
       =text_field_tag 'username', nil, :autofocus => true, :placeholder => "janedoe"

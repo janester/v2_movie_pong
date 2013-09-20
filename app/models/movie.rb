@@ -24,6 +24,7 @@ class Movie < ActiveRecord::Base
     needed_info = {}
     needed_info[:title] = response["title"]
     needed_info[:year] = response["release_date"][0...4]
+    needed_info[:release] = response["release_date"]
     needed_info[:tmdb_id] = response["id"]
     needed_info[:cast] = response["casts"]["cast"]
     needed_info[:popularity] = response["popularity"]
@@ -36,7 +37,7 @@ class Movie < ActiveRecord::Base
     movie = Movie.find_or_initialize_by_tmdb_id(movie_id)
     #call api (mostly to update popularity)
     results = Movie.api_call(movie_id)
-    if results[:popularity] > 2
+    if (results[:popularity] > 2) && (results[:release].to_date.past?)
       #update movie information
       movie.update_attributes(title:results[:title], year:results[:year], tmdb_popularity:results[:popularity])
       #make sure the cast isn't already added

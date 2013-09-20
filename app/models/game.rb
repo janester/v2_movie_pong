@@ -65,7 +65,7 @@ class Game < ActiveRecord::Base
     if new_movies.length == 0
       return nil
     else
-      return new_movies[0]
+      return new_movies.sample
     end
   end #find_movie
 

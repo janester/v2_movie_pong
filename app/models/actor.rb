@@ -21,7 +21,7 @@ class Actor < ActiveRecord::Base
   def Actor.api_call(actor_id)
     response = JSON(RestClient.get("http://api.themoviedb.org/3/person/#{actor_id}?api_key=#{TMDB}&append_to_response=credits", {:accept => "application/json"}))
     needed_info = {}
-    needed_info[:name] = response["name"]
+    needed_info[:name] = response["name"].downcase
     needed_info[:tmdb_id] = response["id"]
     needed_info[:films] = response["credits"]["cast"]
     needed_info[:popularity] = response["popularity"]

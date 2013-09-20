@@ -24,7 +24,7 @@ class GamesController < ApplicationController
         if movie.nil?
           game.scores << Score.create(:computer => 1)
           session[:round] +=1
-          render :json => {scores:game.scores, message:"Congrats! You beat me this round! I couldn't find any movies that #{actor.name} has been in that haven't already been said."}
+          render :json => {scores:game.scores, message:"Congrats! You beat me this round! I couldn't find any movies that #{actor.name.titleize} has been in that haven't already been said."}
         else
           actors = Actor.where("id BETWEEN #{session[:last_actor]+1} AND #{Actor.last.id}").map(&:name)
           session[:last_actor] = Actor.last.id

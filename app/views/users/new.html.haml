@@ -1,13 +1,13 @@
 .row
-  .small-12.columns
+  .large-12.columns
     %h1 Sign Up for Movie Pong!
 .row
-  .small-4.small-centered.columns
+  .large-4.large-centered.columns
     =form_for @user do |f|
       =f.label :name
       =f.text_field :name, :autofocus => true, :placeholder => "Jane Doe"
       =f.label :username
-      =f.text_field :username, :autofocus => true, :placeholder => "janedoe"
+      =f.text_field :username, :placeholder => "janedoe"
       =f.label :password
       =f.password_field :password, :placeholder => "example: abc"
       =f.label :password_confirmation
