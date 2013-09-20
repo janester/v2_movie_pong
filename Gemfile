@@ -11,7 +11,7 @@ gem 'activesupport'
 gem 'httparty'
 gem 'themoviedb'
 # gem 'textacular', '~> 3.0', require: 'textacular/rails'
-
+gem "rest-client"
 gem "unicorn"
 gem "rainbow"
 
@@ -24,6 +24,7 @@ group :assets do
 end
 
 group :development, :test do
+  gem 'rack-mini-profiler'
   gem 'pry-rails'
   gem 'pry-debugger'
   gem 'pry-stack_explorer'

@@ -3,8 +3,7 @@ class GamesController < ApplicationController
   end
 
   def create
-    game = Game.create
-    @current_user.games << game
+    game = Game.create(user_id:@current_user.id)
     session[:round] = 1
     redirect_to(start_game_path(game.id))
   end
@@ -47,9 +46,10 @@ class GamesController < ApplicationController
 
   def start
     @game = Game.find(params[:id])
-    unless @game.scores.empty?
+    scores = @game.scores
+    unless scores.empty?
       @p = @c = 0
-      @game.scores.each do |score|
+      scores.each do |score|
         score.computer == 0 ? @p +=1 : @c +=1
       end
     end
@@ -57,8 +57,13 @@ class GamesController < ApplicationController
 
   def get_info
     game = Game.find(params[:id])
-    movies = Movie.order("times_said DESC").order("tmdb_popularity DESC")
-    movies = movies.reject{|movie| game.movies.include?(movie)}
+    said_movies = game.movies
+    if said_movies.empty?
+      movies = Movie.order("times_said DESC").order("tmdb_popularity DESC")
+    else
+      said_movies = said_movies.map(&:id).join(", ")
+      movies = Movie.order("times_said DESC").order("tmdb_popularity DESC").where("id NOT IN (#{said_movies})")
+    end
     movies = movies[0,20].shuffle
     session[:last_actor] = Actor.last.id
     render :json => {movies:movies, actors:Actor.all.map{|x| x.name}}
