@@ -34,7 +34,7 @@ class GamesController < ApplicationController
     else
       session[:round] +=1
       if actor == ""
-        movie = Movie.find(movie)
+        movie = Movie.find_by_tmdb_id(movie)
         movie.times_said -= 1
         movie.save
         message = "Sorry! You got a point!"
