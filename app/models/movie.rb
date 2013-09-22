@@ -41,7 +41,7 @@ class Movie < ActiveRecord::Base
       #update movie information
       movie.update_attributes(title:results[:title], year:results[:year], tmdb_popularity:results[:popularity])
       #make sure the cast isn't already added
-      movie.add_cast(results[:cast]) if movie.actors.length < 5
+      movie.add_cast(results[:cast])
       puts "#{movie.title} and actors have been added".background(:black).foreground(:red).underline
       return movie
     else
