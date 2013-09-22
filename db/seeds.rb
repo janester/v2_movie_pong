@@ -1,10 +1,9 @@
-User.delete_all
 Movie.delete_all
 Actor.delete_all
 Game.delete_all
 Score.delete_all
 
-u1 = User.create(:name => "Jane", :username => "janesternbach", :password => "abc", :password_confirmation => "abc")
+# u1 = User.create(:name => "Jane", :username => "janesternbach", :password => "abc", :password_confirmation => "abc")
 
 
 popular_movie_ids = Tmdb::Movie.popular.map{|x| x["id"]}
