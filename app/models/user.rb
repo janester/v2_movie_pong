@@ -15,4 +15,7 @@ class User < ActiveRecord::Base
   attr_accessible :name, :username, :password, :password_confirmation
   has_many :games
 
+  validates :name, :username, presence: true
+  validates :username, uniqueness: true
+
 end

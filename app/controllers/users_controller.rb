@@ -8,7 +8,13 @@ class UsersController < ApplicationController
   end
 
   def create
-    User.create(params[:user])
-    redirect_to(login_path)
+    @user = User.new(params[:user])
+    if @user.save
+      flash[:notice] = "Success! Please log in"
+      redirect_to(login_path)
+    else
+      flash[:validation_error] = @user.errors.messages
+      redirect_to(new_user_path)
+    end
   end
 end
