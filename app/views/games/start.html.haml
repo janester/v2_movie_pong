@@ -12,19 +12,10 @@
     %h3#or OR
     =link_to("Ask For A New Movie", "#", :class => "button radius", :id => "new_movie_btn")
     #game.hide= @game.id
-    -if @c.nil?
-      #pageScoreboard.scoreboard.hide
-        #computer
-          Computer Score
-          #computer_score
-        #player
-          Player Score
-          #player_score
-    -else
-      #pageScoreboard.scoreboard
-        #computer
-          Computer Score
-          #computer_score= @c
-        #player
-          Player Score
-          #player_score= @p
+    #pageScoreboard.scoreboard
+      #computer
+        Computer Score
+        #computer_score= session[:computer_score].to_i
+      #player
+        Player Score
+        #player_score= session[:player_score].to_i

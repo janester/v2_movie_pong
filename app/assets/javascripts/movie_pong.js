@@ -12,6 +12,7 @@ var computer_score = 0;
 var player_score = 0;
 var i = 1;
 var actors = [];
+
 // MODALS***********************************************
 function show_modal()
 {
@@ -56,6 +57,7 @@ function update_start_movies(info)
   change_start_movie();
 }
 
+
 function update_actor_autocomplete(array) {
   actors.push(array);
   actors = _.uniq(_.compact(_.flatten(actors)));
@@ -99,7 +101,7 @@ function get_entered_info(e)
     alert("Sorry Something Went Wrong...");
     location.reload();
   },
-  data: {movie:movie, actor:actor, game_id:game_id}
+  data: {movie_id:movie, actor:actor, game_id:game_id}
   }).done(update_page);
   spin_init();
   return false;

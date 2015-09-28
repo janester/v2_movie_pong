@@ -15,17 +15,15 @@ class Actor < ActiveRecord::Base
   has_and_belongs_to_many :movies
   has_and_belongs_to_many :games
   validates :tmdb_id, :uniqueness => true
-  # validates :tmdb_id, :name, :presence => true
+  validates :tmdb_id, :name, :presence => true
 
 
-  def Actor.api_call(actor_id)
-    response = JSON(RestClient.get("http://api.themoviedb.org/3/person/#{actor_id}?api_key=#{TMDB}&append_to_response=credits", {:accept => "application/json"}))
-    needed_info = {}
-    needed_info[:name] = response["name"].downcase
-    needed_info[:tmdb_id] = response["id"]
-    needed_info[:films] = response["credits"]["cast"]
-    needed_info[:popularity] = response["popularity"]
-    return needed_info
+  def self.format_from_api(response)
+    {
+      name: response["name"],
+      tmdb_id: response["id"],
+      popularity: response["popularity"]
+    }
   end
 
   def Actor.get_from_internet_and_filmography(actor_id)
@@ -43,5 +41,4 @@ class Actor < ActiveRecord::Base
       Movie.get_from_internet_and_add_cast_actors(movie["id"])
     end
   end
-
 end

@@ -14,6 +14,7 @@ gem 'themoviedb'
 gem "rest-client"
 gem "unicorn"
 gem "rainbow"
+gem "typhoeus"
 
 
 

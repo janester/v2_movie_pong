@@ -18,17 +18,25 @@ class Movie < ActiveRecord::Base
   has_and_belongs_to_many :games
   validates :tmdb_id, :uniqueness => true
 
+  scope :order_by_popularity, order("times_said DESC").order("tmdb_popularity DESC")
+  scope :has_not_been_used, ->(said_movies) { where("id NOT IN (#{said_movies})") }
 
-  def Movie.api_call(movie_id)
-    response = JSON(RestClient.get("http://api.themoviedb.org/3/movie/#{movie_id}?api_key=#{TMDB}&append_to_response=casts", {:accept => "application/json"}))
-    needed_info = {}
-    needed_info[:title] = response["title"]
-    needed_info[:year] = response["release_date"][0...4]
-    needed_info[:release] = response["release_date"]
-    needed_info[:tmdb_id] = response["id"]
-    needed_info[:cast] = response["casts"]["cast"]
-    needed_info[:popularity] = response["popularity"]
-    return needed_info
+  def has_actor?(actor_id)
+    return true if actors.pluck(:tmdb_id).include?(actor_id)
+    retrieve_cast.any? {|actor| actor["id"] == actor_id}
+  end
+
+  def self.format_from_api(response)
+    {
+      tmdb_id: response["id"],
+      tmdb_popularity: response["popularity"],
+      year: response["release_date"][0...4],
+      title: response["title"]
+    }
+  end
+
+  def retrieve_cast
+    MovieDb.get_movie_credits(tmdb_id)
   end
 
 
