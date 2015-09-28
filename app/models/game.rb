@@ -43,9 +43,9 @@ class Game < ActiveRecord::Base
     return actor_id
   end #actor_check
 
-  def actor_has_been_said?(actor_id)
-    self.actors.map(&:tmdb_id).include?(actor_id)
-  end #actor_has_been_said?
+  def actor_already_said?(id)
+    actors.map(&:tmdb_id).include?(id)
+  end
 
   def add_actor(actor_id)
     a = Actor.find_by_tmdb_id(actor_id)

@@ -15,10 +15,10 @@ class Score < ActiveRecord::Base
   belongs_to :game
 
   def for_player?
-    !player_score.zero?
+    !player.zero?
   end
 
   def for_computer?
-    !computer_score.zero?
+    !computer.zero?
   end
 end

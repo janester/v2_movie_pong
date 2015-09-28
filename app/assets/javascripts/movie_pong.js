@@ -12,6 +12,7 @@ var computer_score = 0;
 var player_score = 0;
 var i = 1;
 var actors = [];
+var actor_objs = [];
 
 // MODALS***********************************************
 function show_modal()
@@ -53,8 +54,18 @@ function get_start_movies()
 function update_start_movies(info)
 {
   start_movies = info.movies;
-  update_actor_autocomplete(info.actors);
+  actor_objs = info.actors;
+  update_actor_autocomplete(get_actor_names());
   change_start_movie();
+}
+
+function get_actor_names(){
+  return _.map(actor_objs, function(x) {return x.name; });
+}
+
+function get_actor_id(name){
+  actor = _.find(actor_objs, function(x) { return x.name == name; });
+  return actor.tmdb_id;
 }
 
 
@@ -101,7 +112,7 @@ function get_entered_info(e)
     alert("Sorry Something Went Wrong...");
     location.reload();
   },
-  data: {movie_id:movie, actor:actor, game_id:game_id}
+  data: {movie_id:movie, actor_id: get_actor_id(actor), game_id:game_id}
   }).done(update_page);
   spin_init();
   return false;
@@ -115,7 +126,8 @@ function hide_start_stuff()
 function update_page(message)
 {
   if (message.actors != undefined) {
-    update_actor_autocomplete(message.actors);
+    actor_objs = message.actors
+    update_actor_autocomplete(get_actor_names());
   }
   hide_start_stuff();
   $("#spinner").empty();

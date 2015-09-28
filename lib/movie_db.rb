@@ -7,6 +7,11 @@ class MovieDb
       make_request(path, params)
     end
 
+    def get_movie(id)
+      path = "movie/#{id}"
+      make_request(path)
+    end
+
     def get_popular_movies
       path = "movie/popular"
       response = make_request(path)
@@ -28,12 +33,6 @@ class MovieDb
     def get_actor(id)
       path = "person/#{id}"
       response = make_request(path)
-    end
-
-    def search_actor(name)
-      path = "search/person"
-      params = default_params.merge(query: name)
-      make_request(path, params)
     end
 
     def make_request(path, params = default_params)
