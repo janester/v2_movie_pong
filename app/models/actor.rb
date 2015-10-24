@@ -55,8 +55,8 @@ class Actor < ActiveRecord::Base
   end
 
   def ordered_filmography
-    past_films = retrieve_filmography.reject {|x| future_year?(x["release_date"]) }
-    past_films.sort_by {|x| DateTime.parse(x["release_date"])}.reverse
+    past_films = retrieve_filmography.reject { |x| future_year?(x["release_date"]) }
+    past_films.sort_by { |x| DateTime.parse(x["release_date"]) }.reverse
   end
 
   def get_movies!
