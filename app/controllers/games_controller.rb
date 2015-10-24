@@ -4,16 +4,17 @@ class GamesController < ApplicationController
   before_filter :set_last_actor, only: [:get_info]
   before_filter :increment_round, only: [:play]
   before_filter :add_movie_to_game, only: [:play]
+  before_filter :increment_movie_times_said, only: [:play]
 
   def index
   end
 
   def create
-    game = Game.create(user_id:@current_user.id)
+    @game = Game.create(user_id:@current_user.id)
     session[:round] = 1
     session[:player_score] = 0
     session[:computer_score] = 0
-    redirect_to(start_game_path(game.id))
+    redirect_to(start_game_path(@game.id))
   end
 
   def play
@@ -43,6 +44,9 @@ class GamesController < ApplicationController
 
   def add_movie_to_game
     game.movies << movie
+  end
+
+  def increment_movie_times_said
     movie.increment_times_said!
   end
 
@@ -52,7 +56,7 @@ class GamesController < ApplicationController
   end
 
   def increment_round
-    session[:round] +=1
+    session[:round] += 1
   end
 
   def actor_already_said
@@ -66,7 +70,7 @@ class GamesController < ApplicationController
   end
 
   def start
-    @game = Game.find(params[:id])
+    game
   end
 
   def get_info

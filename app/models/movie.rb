@@ -21,24 +21,26 @@ class Movie < ActiveRecord::Base
   scope :order_by_popularity, order("times_said DESC").order("tmdb_popularity DESC")
   scope :has_not_been_used, ->(said_movies) { where("id NOT IN (#{said_movies})") }
 
+  class << self
+    def create_or_find_movie(id)
+      movie = find_by_tmdb_id(id)
+      return movie if movie
+      movie = MovieDb.get_movie(id)
+      create(format_from_api(movie))
+    end
+
+    def format_from_api(response)
+      {
+        tmdb_id: response["id"],
+        tmdb_popularity: response["popularity"],
+        year: response["release_date"].try(:[], 0...4),
+        title: response["title"]
+      }
+    end
+  end
+
   def has_actor?(actor_id)
     return true if actors.pluck(:tmdb_id).include?(actor_id)
-  end
-
-  def self.create_or_find_movie(id)
-    movie = find_by_tmdb_id(id)
-    return movie if movie
-    movie = MovieDb.get_movie(id)
-    create(format_from_api(movie))
-  end
-
-  def self.format_from_api(response)
-    {
-      tmdb_id: response["id"],
-      tmdb_popularity: response["popularity"],
-      year: response["release_date"][0...4],
-      title: response["title"]
-    }
   end
 
   def add_if_new(actor)
