@@ -51,7 +51,7 @@ class Movie < ActiveRecord::Base
   def get_cast!
     cast_response = MovieDb.get_movie_credits(tmdb_id).select { |x| x[:character].present? }
     cast_response.map do |actor_response|
-      actor = Actor.create_or_find_movie(actor_response[:id])
+      actor = Actor.create_or_find_actor(actor_response[:id])
       add_if_new(actor)
     end
   end
