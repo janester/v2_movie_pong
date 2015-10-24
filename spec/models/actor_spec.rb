@@ -79,17 +79,35 @@ describe Actor do
     end
 
     describe '#future_year?' do
+      subject { build(:actor) }
+      let(:result) { subject.future_year?(release_date) }
       context "when the release_date is nil" do
+        let(:release_date) {}
+        it "returns true" do
+          expect(result).to eq true
+        end
       end
 
       context "when the release_date is not nil" do
         context "when the release year is next year" do
+          let(:release_date) { (DateTime.now.year + 1).to_s }
+          it "returns true" do
+            expect(result).to eq true
+          end
         end
 
         context "when the release year is this year" do
+          let(:release_date) { (DateTime.now.year).to_s }
+          it "returns false" do
+            expect(result).to eq false
+          end
         end
 
         context "when the release year is in the past" do
+          let(:release_date) { (DateTime.now.year - 1).to_s }
+          it "returns false" do
+            expect(result).to eq false
+          end
         end
       end
     end
