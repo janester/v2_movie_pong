@@ -10,7 +10,7 @@ class GamesController < ApplicationController
   end
 
   def create
-    @game = Game.create(user_id:@current_user.id)
+    @game = Game.create(user_id: @current_user.id)
     session[:round] = 1
     session[:player_score] = 0
     session[:computer_score] = 0
@@ -24,7 +24,7 @@ class GamesController < ApplicationController
     new_movie = get_next_movie
     return no_more_popular_movies unless new_movie
     new_movie.get_cast!
-    render json: {scores: game.scores, movie: new_movie, actors: actors}
+    render json: { scores: game.scores, movie: new_movie, actors: actors }
   end
 
   def get_next_movie
@@ -39,7 +39,7 @@ class GamesController < ApplicationController
 
   def no_more_popular_movies
     game.scores.create(player: 1)
-    render json: {scores: game.scores, message: "Nice! You out-witted a comptuer!"}
+    render json: { scores: game.scores, message: "Nice! You out-witted a comptuer!" }
   end
 
   def add_movie_to_game
@@ -61,12 +61,12 @@ class GamesController < ApplicationController
 
   def actor_already_said
     game.scores.create(computer: 1)
-    render json: {scores: game.scores, message: "#{actor.name} has already been said"}
+    render json: { scores: game.scores, message: "#{actor.name} has already been said" }
   end
 
   def actor_not_in_movie
     game.scores.create(computer: 1)
-    render json: {scores: game.scores, message: "#{actor.name} is not in #{movie.title}"}
+    render json: { scores: game.scores, message: "#{actor.name} is not in #{movie.title}" }
   end
 
   def start
@@ -77,13 +77,12 @@ class GamesController < ApplicationController
     movies = Movie.order_by_popularity
     movies.has_not_been_used(said_movies) if said_movies
     movies = movies.first(20).shuffle
-    render :json => {movies:movies, actors: actors}
+    render json: { movies: movies, actors: actors }
   end
 
   def actors
     Actor.select("name, tmdb_id")
   end
-
 
   private
 

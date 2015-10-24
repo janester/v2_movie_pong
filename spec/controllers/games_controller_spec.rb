@@ -63,8 +63,8 @@ describe GamesController do
     let(:actor) { create(:actor) }
     let(:movie) { create(:movie) }
     let(:response_body) { JSON(response.body) }
-    let(:computer_total) { response_body["scores"].inject(0) { |t, x| t += x["computer"] } }
-    let(:player_total) { response_body["scores"].inject(0) { |t, x| t += x["player"] } }
+    let(:computer_total) { response_body["scores"].inject(0) { |a, e| a + e["computer"] } }
+    let(:player_total) { response_body["scores"].inject(0) { |a, e| a + e["player"] } }
 
     before { controller.session[:round] = 0 }
 

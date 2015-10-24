@@ -16,7 +16,7 @@ class Movie < ActiveRecord::Base
   attr_accessible :title, :year, :tmdb_id, :tmdb_popularity, :times_said
   has_and_belongs_to_many :actors
   has_and_belongs_to_many :games
-  validates :tmdb_id, :uniqueness => true
+  validates :tmdb_id, uniqueness: true
 
   scope :order_by_popularity, order("times_said DESC").order("tmdb_popularity DESC")
   scope :has_not_been_used, ->(said_movies) { where("id NOT IN (#{said_movies})") }
@@ -49,7 +49,7 @@ class Movie < ActiveRecord::Base
   end
 
   def get_cast!
-    cast_response = MovieDb.get_movie_credits(tmdb_id).select {|x| x[:character].present? }
+    cast_response = MovieDb.get_movie_credits(tmdb_id).select { |x| x[:character].present? }
     cast_response.map do |actor_response|
       actor = Actor.create_or_find_movie(actor_response[:id])
       add_if_new(actor)

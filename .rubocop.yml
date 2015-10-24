@@ -6,6 +6,7 @@ AllCops:
     - 'vendor/**/*'
     - 'spec/fixtures/**/*'
     - 'tmp/**/*'
+    - 'script/*'
 
 Metrics/AbcSize:
   Enabled: false
@@ -54,6 +55,9 @@ Style/SymbolProc:
   IgnoredMethods:
     - respond_to
     - before_destroy
+
+Style/PredicateName:
+  Enabled: false
 
 Style/WhileUntilModifier:
   MaxLineLength: 80

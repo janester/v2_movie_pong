@@ -32,7 +32,7 @@ class MovieDb
 
     def get_actor(id)
       path = "person/#{id}"
-      response = make_request(path)
+      make_request(path)
     end
 
     def make_request(path, params = default_params)

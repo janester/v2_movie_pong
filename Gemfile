@@ -32,7 +32,7 @@ group :development, :test do
   gem "shoulda-matchers"
   gem "bullet"
   gem "rubocop", "~> 0.28", require: false
-  gem 'factory_girl_rails'
+  gem "factory_girl_rails"
   gem "database_cleaner"
 
   gem "annotate"

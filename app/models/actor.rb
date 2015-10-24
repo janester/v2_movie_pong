@@ -16,8 +16,8 @@ class Actor < ActiveRecord::Base
   attr_accessible :name, :tmdb_id, :popularity, :times_said
   has_and_belongs_to_many :movies
   has_and_belongs_to_many :games
-  validates :tmdb_id, :uniqueness => true
-  validates :tmdb_id, :name, :presence => true
+  validates :tmdb_id, uniqueness: true
+  validates :tmdb_id, :name, presence: true
 
   def self.create_or_find_movie(id)
     actor = find_by_tmdb_id(id)
