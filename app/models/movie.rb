@@ -13,60 +13,63 @@
 #
 
 class Movie < ActiveRecord::Base
-  attr_accessible :title, :year, :tmdb_id, :tmdb_popularity
+  attr_accessible :title, :year, :tmdb_id, :tmdb_popularity, :times_said, :full_cast_available, :starting_movie
   has_and_belongs_to_many :actors
   has_and_belongs_to_many :games
-  validates :tmdb_id, :uniqueness => true
+  validates :tmdb_id, uniqueness: true
 
+  scope :order_by_popularity, order("times_said DESC").order("tmdb_popularity DESC")
+  scope :has_not_been_used, ->(said_movies) { where("id NOT IN (#{said_movies.join(",")})") }
+  scope :starting_movies, where(starting_movie: true)
 
-  def Movie.api_call(movie_id)
-    response = JSON(RestClient.get("http://api.themoviedb.org/3/movie/#{movie_id}?api_key=#{TMDB}&append_to_response=casts", {:accept => "application/json"}))
-    needed_info = {}
-    needed_info[:title] = response["title"]
-    needed_info[:year] = response["release_date"][0...4]
-    needed_info[:release] = response["release_date"]
-    needed_info[:tmdb_id] = response["id"]
-    needed_info[:cast] = response["casts"]["cast"]
-    needed_info[:popularity] = response["popularity"]
-    return needed_info
-  end
+  class << self
+    def create_or_find_movie(id)
+      movie = find_by_tmdb_id(id)
+      return movie if movie
+      movie = MovieDb.get_movie(id)
+      create(format_from_api(movie))
+    end
 
-
-  def Movie.get_from_internet_and_add_cast_actors(movie_id)
-    #find movie in db by tmdb_id
-    movie = Movie.find_or_initialize_by_tmdb_id(movie_id)
-    #call api (mostly to update popularity)
-    results = Movie.api_call(movie_id)
-    if (results[:popularity] > 2) && (results[:release].to_date.past?)
-      #update movie information
-      movie.update_attributes(title:results[:title], year:results[:year], tmdb_popularity:results[:popularity])
-      #make sure the cast isn't already added
-      movie.add_cast(results[:cast])
-      puts "#{movie.title} and actors have been added".background(:black).foreground(:red).underline
-      return movie
-    else
-      return nil
+    def format_from_api(response)
+      {
+        tmdb_id: response["id"],
+        tmdb_popularity: response["popularity"],
+        year: response["release_date"].try(:[], 0...4),
+        title: response["title"]
+      }
     end
   end
 
-
-  def add_cast(cast_results)
-    puts "adding cast to #{self.title}...".background(:black).foreground(:red).underline
-    #only go the db once to get the actors
-    movie_actors = self.actors
-    cast_results.each do |actor|
-      #downcase name to make sure all input is sanitized
-      name = actor["name"].downcase
-      #find actor in the db by tmdb_id
-      a = Actor.find_or_initialize_by_tmdb_id(actor["id"])
-      #update actor info if there isn't any
-      a.update_attributes(name:name) if a.name.nil?
-      unless movie_actors.include?(a)
-        #add the actor to the array of actors for this movie
-        puts "#{name} is being added to #{self.title}".background(:black).foreground(:red).underline
-        movie_actors << a
-      end
-    end
+  def has_actor?(actor_id)
+    return true if actors.pluck(:tmdb_id).include?(actor_id)
   end
 
+  def add_if_new(actor)
+    return if actors.include?(actor)
+    actors << actor
+  end
+
+  def get_cast!
+    return if full_cast_available
+    get_characters.map { |a| add_actor(a) }
+    update_attributes(full_cast_available: true)
+  end
+
+  def add_actor(params)
+    actor = Actor.create_or_find_actor(params[:id], params)
+    add_if_new(actor)
+  end
+
+  def get_characters
+    retrieve_credits.select { |x| x[:character].present? }
+  end
+
+  def retrieve_credits
+    credits = MovieDb.get_movie_credits(tmdb_id)
+    credits.is_a?(Array) ? credits : []
+  end
+
+  def increment_times_said!
+    update_attributes(times_said: times_said + 1)
+  end
 end

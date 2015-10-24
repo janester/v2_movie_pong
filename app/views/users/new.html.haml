@@ -3,6 +3,9 @@
     %h1 Sign Up for Movie Pong!
 .row
   .large-4.large-centered.columns
+    = render :partial => "layouts/validation_errors"
+.row
+  .large-4.large-centered.columns
     =form_for @user do |f|
       =f.label :name
       =f.text_field :name, :autofocus => true, :placeholder => "Jane Doe"

@@ -1,0 +1,1 @@
+HWIA = HashWithIndifferentAccess

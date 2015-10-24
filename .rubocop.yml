@@ -1,0 +1,66 @@
+# This is the configuration used to check the rubocop source code.
+AllCops:
+  Exclude:
+    - 'config/**/*'
+    - 'db/**/*'
+    - 'vendor/**/*'
+    - 'spec/fixtures/**/*'
+    - 'tmp/**/*'
+    - 'script/*'
+
+Metrics/AbcSize:
+  Enabled: false
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+
+Style/AccessorMethodName:
+  Enabled: false
+
+Style/AlignParameters:
+  EnforcedStyle: with_fixed_indentation
+
+Style/Documentation:
+  Description: 'Document classes and non-namespace modules.'
+  Enabled: false
+
+Style/Encoding:
+  Enabled:
+  EnforcedStyle: when_needed
+
+Style/IndentHash:
+  EnforcedStyle: consistent
+
+Style/IfUnlessModifier:
+  Enabled: false
+
+Style/MultilineOperationIndentation:
+  EnforcedStyle: indented
+
+Style/StringLiterals:
+  EnforcedStyle: double_quotes
+  SupportedStyles:
+    - single_quotes
+    - double_quotes
+
+Style/StringLiteralsInInterpolation:
+  EnforcedStyle: double_quotes
+  SupportedStyles:
+    - single_quotes
+    - double_quotes
+
+Style/SymbolProc:
+  # A list of method names to be ignored by the check.
+  # The names should be fairly unique, otherwise you'll end up ignoring lots of code.
+  IgnoredMethods:
+    - respond_to
+    - before_destroy
+
+Style/PredicateName:
+  Enabled: false
+
+Style/WhileUntilModifier:
+  MaxLineLength: 80
+
+Metrics/LineLength:
+  Max: 120

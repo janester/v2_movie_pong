@@ -1,0 +1,4 @@
+- if flash[:validation_error].present?
+  - flash[:validation_error].each do |field, value|
+    - value.each do |error|
+      %li.alert-box.radius= "#{field} #{error}"

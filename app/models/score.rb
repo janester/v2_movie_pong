@@ -13,4 +13,12 @@
 class Score < ActiveRecord::Base
   attr_accessible :computer, :player
   belongs_to :game
+
+  def for_player?
+    !player.zero?
+  end
+
+  def for_computer?
+    !computer.zero?
+  end
 end

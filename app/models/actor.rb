@@ -11,37 +11,58 @@
 #
 
 class Actor < ActiveRecord::Base
-  attr_accessible :name, :tmdb_id, :popularity
+  CURRENT_YEAR = DateTime.now.year
+
+  attr_accessible :name, :tmdb_id, :popularity, :times_said
   has_and_belongs_to_many :movies
   has_and_belongs_to_many :games
-  validates :tmdb_id, :uniqueness => true
-  # validates :tmdb_id, :name, :presence => true
+  validates :tmdb_id, uniqueness: true
+  validates :tmdb_id, :name, presence: true
 
-
-  def Actor.api_call(actor_id)
-    response = JSON(RestClient.get("http://api.themoviedb.org/3/person/#{actor_id}?api_key=#{TMDB}&append_to_response=credits", {:accept => "application/json"}))
-    needed_info = {}
-    needed_info[:name] = response["name"].downcase
-    needed_info[:tmdb_id] = response["id"]
-    needed_info[:films] = response["credits"]["cast"]
-    needed_info[:popularity] = response["popularity"]
-    return needed_info
+  def self.create_or_find_actor(id, params = nil)
+    actor = find_by_tmdb_id(id)
+    return actor if actor
+    actor = params ? params : MovieDb.get_actor(id)
+    create(format_from_api(actor))
   end
 
-  def Actor.get_from_internet_and_filmography(actor_id)
-    actor = Actor.find_or_initialize_by_tmdb_id(actor_id)
-    results = Actor.api_call(actor_id)
-    actor.update_attributes(name:results[:name], popularity:results[:popularity])
-    actor.add_filmography_films(results[:films])
-    puts "#{actor.name} and films have been added...".background(:black).foreground(:red).underline
+  def self.format_from_api(response)
+    {
+      name: response["name"],
+      tmdb_id: response["id"],
+      popularity: response["popularity"]
+    }
   end
 
+  def increment_times_said!
+    update_attributes(times_said: times_said + 1)
+  end
 
+  def add_if_new(movie)
+    return if movies.include?(movie)
+    movies << movie
+  end
 
-  def add_filmography_films(film_results)
-    film_results.each do |movie|
-      Movie.get_from_internet_and_add_cast_actors(movie["id"])
+  def retrieve_filmography
+    movie_responses = MovieDb.get_actor_credits(tmdb_id)
+    movie_responses.is_a?(Array) ? movie_responses : []
+  end
+
+  def future_year?(x)
+    return true if x.nil?
+    return true if x[0...4].to_i > CURRENT_YEAR
+    false
+  end
+
+  def ordered_filmography
+    past_films = retrieve_filmography.reject { |x| future_year?(x["release_date"]) }
+    past_films.sort_by { |x| DateTime.parse(x["release_date"]) }.reverse
+  end
+
+  def get_movies!
+    ordered_filmography.first(15).each do |movie_response|
+      movie = Movie.create_or_find_movie(movie_response[:id])
+      add_if_new(movie)
     end
   end
-
 end

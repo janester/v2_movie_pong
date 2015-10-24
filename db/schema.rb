@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20130920045233) do
+ActiveRecord::Schema.define(:version => 20151024070352) do
 
   create_table "actors", :force => true do |t|
     t.string   "name"
@@ -21,6 +21,8 @@ ActiveRecord::Schema.define(:version => 20130920045233) do
     t.datetime "updated_at",                :null => false
     t.float    "popularity"
   end
+
+  add_index "actors", ["tmdb_id"], :name => "index_actors_on_tmdb_id"
 
   create_table "actors_games", :id => false, :force => true do |t|
     t.integer "actor_id"
@@ -50,11 +52,15 @@ ActiveRecord::Schema.define(:version => 20130920045233) do
     t.string   "title"
     t.integer  "year"
     t.integer  "tmdb_id"
-    t.integer  "times_said",      :default => 0
-    t.datetime "created_at",                     :null => false
-    t.datetime "updated_at",                     :null => false
-    t.integer  "tmdb_popularity", :default => 0
+    t.integer  "times_said",          :default => 0
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
+    t.integer  "tmdb_popularity",     :default => 0
+    t.boolean  "starting_movie",      :default => false
+    t.boolean  "full_cast_available", :default => false
   end
+
+  add_index "movies", ["tmdb_id"], :name => "index_movies_on_tmdb_id"
 
   create_table "scores", :force => true do |t|
     t.integer  "computer",   :default => 0
