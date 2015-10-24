@@ -156,13 +156,13 @@ describe GamesController do
         end
 
         context "when not all of the popular movies for that actor have been said" do
-          let(:movie_2) { HashWithIndifferentAccess.new(id: 0, release_date: "2006", title: "X2") }
+          let(:movie_2) { HWIA.new(id: 0, release_date: "2006", title: "X2") }
           let(:filmography) { [movie_2] }
           let(:response_actor_ids) { response_body["actors"].map { |x| x["tmdb_id"] } }
           let(:new_actors) do
             [
-              HashWithIndifferentAccess.new(id: 0, character: "Storm", name: "Halle Berry"),
-              HashWithIndifferentAccess.new(id: 1, character: "Magneto", name: "Ian McKellan")
+              HWIA.new(id: 0, character: "Storm", name: "Halle Berry"),
+              HWIA.new(id: 1, character: "Magneto", name: "Ian McKellan")
             ]
           end
           before do

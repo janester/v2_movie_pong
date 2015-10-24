@@ -20,10 +20,10 @@ describe Actor do
       let(:id) { 1234 }
       let(:call) { subject.create_or_find_actor(id) }
       context "when the id does not exist in the database" do
-        context 'when all the info is passed in' do
-          let(:params) { HashWithIndifferentAccess.new(id: id, name: "Hugh Jackman") }
+        context "when all the info is passed in" do
+          let(:params) { HWIA.new(id: id, name: "Hugh Jackman") }
           let(:call) { subject.create_or_find_actor(id, params) }
-          it 'creates a new record' do
+          it "creates a new record" do
             expect(subject).to receive(:create)
             call
           end
@@ -37,7 +37,7 @@ describe Actor do
           end
         end
 
-        context 'when the info is not passed in' do
+        context "when the info is not passed in" do
           before { allow(MovieDb).to receive(:get_actor).with(id) { { "id" => id, "name" => "x" } } }
           it "does create a new record" do
             expect(subject).to receive(:create)
