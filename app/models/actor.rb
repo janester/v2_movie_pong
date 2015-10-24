@@ -60,9 +60,11 @@ class Actor < ActiveRecord::Base
   end
 
   def get_movies!
-    ordered_filmography.first(15).each do |movie_response|
-      movie = Movie.create_or_find_movie(movie_response[:id])
-      add_if_new(movie)
-    end
+    ordered_filmography.first(15).map { |m| add_movie(m) }
+  end
+
+  def add_movie(m)
+    movie = Movie.create_or_find_movie(m[:id])
+    add_if_new(movie)
   end
 end

@@ -70,5 +70,67 @@ describe Actor do
   end
 
   describe "Instance Methods" do
+    describe '#retrieve_filmography' do
+      context "when the api call is successful" do
+      end
+
+      context "when the api call is not successful" do
+      end
+    end
+
+    describe '#future_year?' do
+      context "when the release_date is nil" do
+      end
+
+      context "when the release_date is not nil" do
+        context "when the release year is next year" do
+        end
+
+        context "when the release year is this year" do
+        end
+
+        context "when the release year is in the past" do
+        end
+      end
+    end
+
+    describe '#ordered_filmography' do
+      context "when some of the films are in the future" do
+      end
+
+      it "returns an array" do
+      end
+
+      it "returns a sorted array" do
+      end
+
+      it "returns the most recent first" do
+      end
+    end
+
+    describe '#get_movies!' do
+      it "returns a list of 15 movies" do
+      end
+
+      context "when some movies are new" do
+        it "creates the record for it" do
+        end
+      end
+
+      context "when all movies are not new" do
+        it "finds the records" do
+        end
+      end
+
+      context "when some of the movies already are associated" do
+        it "does not duplicate the association" do
+        end
+      end
+
+      context "when none are already associated" do
+        it "creates the association" do
+        end
+      end
+    end
   end
 end
