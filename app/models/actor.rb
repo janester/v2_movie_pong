@@ -45,13 +45,22 @@ class Actor < ActiveRecord::Base
 
   def retrieve_filmography
     movie_responses = MovieDb.get_actor_credits(tmdb_id)
-    movie_responses.reject do |x|
-      x["release_date"] && x["release_date"][0...4].to_i > CURRENT_YEAR
-    end
+    movie_responses.is_a?(Array) ? movie_responses : []
+  end
+
+  def future_year?(x)
+    return true if x.nil?
+    return true if x[0...4].to_i > CURRENT_YEAR
+    false
+  end
+
+  def ordered_filmography
+    past_films = retrieve_filmography.reject {|x| future_year?(x["release_date"]) }
+    past_films.sort_by {|x| DateTime.parse(x["release_date"])}.reverse
   end
 
   def get_movies!
-    retrieve_filmography.each do |movie_response|
+    ordered_filmography.first(15).each do |movie_response|
       movie = Movie.create_or_find_movie(movie_response[:id])
       add_if_new(movie)
     end

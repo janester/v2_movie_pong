@@ -20,6 +20,9 @@ require File.expand_path("../../config/environment", __FILE__)
 require "shoulda/matchers"
 require "rspec/rails"
 
+Rails.env = "test"
+
+
 RSpec.configure do |config|
   config.use_transactional_fixtures = false
   config.infer_spec_type_from_file_location!

@@ -68,7 +68,7 @@ describe GamesController do
 
     before { controller.session[:round] = 0 }
 
-    context "populating scores" do
+    context "before filters" do
       it { should use_before_filter(:populate_scores) }
       it { should use_before_filter(:increment_round) }
       it { should use_before_filter(:add_movie_to_game) }
@@ -93,12 +93,12 @@ describe GamesController do
     context "when the actor is not in the movie" do
       before { make_request }
 
-      it "gives the computer a point" do
-        expect(computer_total).to eq 1
+      it "does not give the computer a point" do
+        expect(computer_total).to eq 0
       end
 
-      it "does not give the player a point" do
-        expect(player_total).to eq 0
+      it "gives the player a point" do
+        expect(player_total).to eq 1
       end
 
       it "returns a message with an explanation" do
@@ -115,12 +115,12 @@ describe GamesController do
           make_request
         end
 
-        it "gives the computer a point" do
-          expect(computer_total).to eq 1
+        it "does not give the computer a point" do
+          expect(computer_total).to eq 0
         end
 
-        it "does not give the player a point" do
-          expect(player_total).to eq 0
+        it "gives the player a point" do
+          expect(player_total).to eq 1
         end
 
         it "returns a message with an explanation" do
@@ -142,12 +142,12 @@ describe GamesController do
         context "when all of the popular movies for that actor have been said" do
           before { make_request }
 
-          it "gives the player a point" do
-            expect(player_total).to eq 1
+          it "does not give the player a point" do
+            expect(player_total).to eq 0
           end
 
-          it "does not give the computer a point" do
-            expect(computer_total).to eq 0
+          it "gives the computer a point" do
+            expect(computer_total).to eq 1
           end
 
           it "returns a message with an explanation" do
@@ -156,7 +156,7 @@ describe GamesController do
         end
 
         context "when not all of the popular movies for that actor have been said" do
-          let(:movie_2) { HWIA.new(id: 0, release_date: "2006", title: "X2") }
+          let(:movie_2) { HWIA.new(id: 0, release_date: "2006-05-03", title: "X2") }
           let(:filmography) { [movie_2] }
           let(:response_actor_ids) { response_body["actors"].map { |x| x["tmdb_id"] } }
           let(:new_actors) do

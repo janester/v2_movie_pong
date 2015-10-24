@@ -38,7 +38,7 @@ class GamesController < ApplicationController
   end
 
   def no_more_popular_movies
-    game.scores.create(player: 1)
+    game.scores.create(computer: 1)
     render json: { scores: game.scores, message: "Nice! You out-witted a comptuer!" }
   end
 
@@ -60,12 +60,12 @@ class GamesController < ApplicationController
   end
 
   def actor_already_said
-    game.scores.create(computer: 1)
+    game.scores.create(player: 1)
     render json: { scores: game.scores, message: "#{actor.name} has already been said" }
   end
 
   def actor_not_in_movie
-    game.scores.create(computer: 1)
+    game.scores.create(player: 1)
     render json: { scores: game.scores, message: "#{actor.name} is not in #{movie.title}" }
   end
 
@@ -74,10 +74,13 @@ class GamesController < ApplicationController
   end
 
   def get_info
-    movies = Movie.order_by_popularity
-    movies.has_not_been_used(said_movies) if said_movies
-    movies = movies.first(20).shuffle
-    render json: { movies: movies, actors: actors }
+    render json: { movies: starting_movies, actors: actors }
+  end
+
+  def starting_movies
+    movies = Movie.starting_movies
+    movies = movies.has_not_been_used(said_movies) unless game.movies.empty?
+    movies.shuffle
   end
 
   def actors

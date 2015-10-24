@@ -75,7 +75,7 @@ describe Movie do
 
         context "when an actor response is a character" do
           it "does find or create an actor record for it" do
-            expect(Actor).to receive(:create_or_find_actor).with(id).and_call_original
+            expect(Actor).to receive(:create_or_find_actor).with(id, credits.first).and_call_original
             subject.get_cast!
           end
         end
@@ -90,7 +90,6 @@ describe Movie do
         end
 
         context "when the actor is not already associated with the movie" do
-          before { allow(MovieDb).to receive(:get_actor).with(id) { credits.first } }
           it "adds the association" do
             subject.get_cast!
             expect(subject.actors.map(&:tmdb_id)).to include(id)

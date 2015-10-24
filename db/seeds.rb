@@ -17,23 +17,17 @@ def create_cast(movie)
   puts "CAST COUNT: #{cast.count}"
   cast.each_with_index do |actor_response, i|
     puts "Creating Actor: #{actor_response["name"]}"
-    actor = find_or_get_actor(actor_response[:id])
-    movie.actors << actor
+    actor = Actor.create_or_find_actor(actor_response[:id], actor_response)
+    actor.valid? ? (movie.actors << actor) : puts("ACTOR NOT VALID")
     sleep 5 if i%20 == 0
   end
 end
 
-def find_or_get_actor(id)
-  actor = Actor.find_by_tmdb_id(id)
-  return actor if actor
-  actor = MovieDb.get_actor(id)
-  Actor.create(Actor.format_from_api(actor))
-end
-
 puts "Fetching popular movies..."
-movies = MovieDb.get_popular_movies
+movies = MovieDb.get_popular_movies.first(10)
 movies.each do |movie_response|
   puts "Creating Movie: #{movie_response["title"]}"
   movie = create_movie(movie_response)
   create_cast(movie)
+  movie.update_attributes(full_cast_available: true, starting_movie: true)
 end

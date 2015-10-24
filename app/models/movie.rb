@@ -13,13 +13,14 @@
 #
 
 class Movie < ActiveRecord::Base
-  attr_accessible :title, :year, :tmdb_id, :tmdb_popularity, :times_said
+  attr_accessible :title, :year, :tmdb_id, :tmdb_popularity, :times_said, :full_cast_available, :starting_movie
   has_and_belongs_to_many :actors
   has_and_belongs_to_many :games
   validates :tmdb_id, uniqueness: true
 
   scope :order_by_popularity, order("times_said DESC").order("tmdb_popularity DESC")
-  scope :has_not_been_used, ->(said_movies) { where("id NOT IN (#{said_movies})") }
+  scope :has_not_been_used, ->(said_movies) { where("id NOT IN (#{said_movies.join(",")})") }
+  scope :starting_movies, where(starting_movie: true)
 
   class << self
     def create_or_find_movie(id)
@@ -49,11 +50,23 @@ class Movie < ActiveRecord::Base
   end
 
   def get_cast!
-    cast_response = MovieDb.get_movie_credits(tmdb_id).select { |x| x[:character].present? }
-    cast_response.map do |actor_response|
-      actor = Actor.create_or_find_actor(actor_response[:id])
-      add_if_new(actor)
-    end
+    return if full_cast_available
+    get_characters.map { |a| add_actor(a) }
+    update_attributes(full_cast_available: true)
+  end
+
+  def add_actor(params)
+    actor = Actor.create_or_find_actor(params[:id], params)
+    add_if_new(actor)
+  end
+
+  def get_characters
+    retrieve_credits.select { |x| x[:character].present? }
+  end
+
+  def retrieve_credits
+    credits = MovieDb.get_movie_credits(tmdb_id)
+    credits.is_a?(Array) ? credits : []
   end
 
   def increment_times_said!
