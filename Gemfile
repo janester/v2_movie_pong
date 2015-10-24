@@ -25,8 +25,6 @@ end
 
 group :development do
   gem "rack-mini-profiler"
-  gem "pry-rails"
-  gem "pry-debugger"
   gem "pry-stack_explorer"
   gem "annotate"
   gem "quiet_assets"
@@ -36,6 +34,8 @@ group :development do
 end
 
 group :development, :test do
+  gem "pry-rails"
+  gem "pry-debugger"
   gem "rspec-rails", "~> 3.0"
   gem "shoulda-matchers"
   gem "bullet"

@@ -19,10 +19,10 @@ class Actor < ActiveRecord::Base
   validates :tmdb_id, uniqueness: true
   validates :tmdb_id, :name, presence: true
 
-  def self.create_or_find_actor(id)
+  def self.create_or_find_actor(id, params = nil)
     actor = find_by_tmdb_id(id)
     return actor if actor
-    actor = MovieDb.get_actor(id)
+    actor = params ? params : MovieDb.get_actor(id)
     create(format_from_api(actor))
   end
 
