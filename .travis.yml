@@ -1,0 +1,8 @@
+language: ruby
+cache: bundler
+rvm:
+  - 1.9.3-p551
+script:
+  - bundle exec rake db:create db:migrate db:test:prepare
+  - bundle exec rubocop
+  - bundle exec rspec

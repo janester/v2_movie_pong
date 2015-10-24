@@ -13,5 +13,3 @@ test:
   database: v2_movie_pong_test
   pool: 5
   host: localhost
-  username: janesternbach
-  password:
