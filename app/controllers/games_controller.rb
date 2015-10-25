@@ -2,8 +2,8 @@ class GamesController < ApplicationController
   HARDNESS_LIMIT = 3
   before_filter :populate_scores
   before_filter :set_last_actor, only: [:get_info]
-  before_filter :increment_round, only: [:play]
-  before_filter :add_movie_to_game, only: [:play]
+  before_filter :increment_round, only: [:play, :dont_know]
+  before_filter :add_movie_to_game, only: [:play, :dont_know]
   before_filter :increment_movie_times_said, only: [:play]
 
   def index
@@ -25,6 +25,12 @@ class GamesController < ApplicationController
     return no_more_popular_movies unless new_movie
     new_movie.get_cast!
     render json: { scores: game.scores, movie: new_movie, actors: actors }
+  end
+
+  def dont_know
+    movie.decrement_times_said!
+    game.scores.create(player: 1)
+    render json: { scores: game.scores, message: "Okay, let's start a new round" }
   end
 
   def get_next_movie

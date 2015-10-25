@@ -9,6 +9,7 @@ V2MoviePong::Application.routes.draw do
       post "play"
       get "start"
       get "get_info"
+      post "dont_know"
     end
   end
 

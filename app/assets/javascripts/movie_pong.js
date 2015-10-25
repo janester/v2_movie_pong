@@ -4,6 +4,7 @@ $(function(){
   $("#start_game_btn_disabled").click(function(){ alert("You Must Be Logged In to Play");});
   get_start_movies();
   $("body").on("click", ".reveal-modal-bg", close_modal);
+  $("#i_dont_know_btn").on("click", user_doesnt_know)
   // $('body').on("click", "#myModal", close_modal);
 });
 
@@ -117,10 +118,37 @@ function get_entered_info(e)
   spin_init();
   return false;
 }
+
+function user_doesnt_know(e){
+  e.preventDefault();
+  var movie = $("#movie_tmdb").text();
+  var game_id = $("#game").text();
+
+  $.ajax({
+  dataType: 'json',
+  type: "post",
+  url: "/games/"+game_id+"/dont_know",
+  error: function(error){
+    $("#spinner").empty();
+    console.log(error);
+    alert("Sorry Something Went Wrong...");
+    location.reload();
+  },
+  data: {movie_id:movie, game_id:game_id}
+  }).done(update_page);
+  spin_init();
+  return false;
+
+}
+
 function hide_start_stuff()
 {
   $("#or").hide();
   $("#new_movie_btn").hide();
+}
+
+function show_idk_button() {
+  $("#i_dont_know_btn").removeClass("hide")
 }
 
 function update_page(message)
@@ -130,6 +158,7 @@ function update_page(message)
     update_actor_autocomplete(get_actor_names());
   }
   hide_start_stuff();
+  show_idk_button();
   $("#spinner").empty();
   console.log(message);
   if(message.movie === undefined)
@@ -209,6 +238,7 @@ function update_page_score()
   $("#pageScoreboard").children().first().children().text(computer_score);
   $("#pageScoreboard").children().last().children().text(player_score);
   show_start_stuff();
+  hide_idk_button()
   update_round_count();
   get_start_movies();
 }
@@ -218,6 +248,10 @@ function show_start_stuff()
   $("#or").show();
   $("#new_movie_btn").show();
   $("#entered_actor").val("");
+}
+
+function hide_idk_button() {
+  $("#i_dont_know_btn").addClass("hide")
 }
 
 function update_round_count()
