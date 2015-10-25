@@ -151,7 +151,7 @@ describe GamesController do
           end
 
           it "returns a message with an explanation" do
-            expect(response_body["message"]).to eq "Nice! You out-witted a comptuer!"
+            expect(response_body["message"]).to eq "Nice! You out-witted a computer!"
           end
         end
 
