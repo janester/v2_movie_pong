@@ -66,5 +66,6 @@ class Actor < ActiveRecord::Base
   def add_movie(m)
     movie = Movie.create_or_find_movie(m[:id])
     add_if_new(movie)
+    movie
   end
 end
