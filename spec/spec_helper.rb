@@ -38,6 +38,10 @@ RSpec.configure do |config|
     end
   end
 
+  config.before(:each) do
+    allow(Typhoeus).to receive(:get).and_return("{}")
+  end
+
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.

@@ -11,6 +11,7 @@
 #
 
 class Actor < ActiveRecord::Base
+  include MoviePong::Common
   CURRENT_YEAR = DateTime.now.year
 
   attr_accessible :name, :tmdb_id, :popularity, :times_said
@@ -18,13 +19,6 @@ class Actor < ActiveRecord::Base
   has_and_belongs_to_many :games
   validates :tmdb_id, uniqueness: true
   validates :tmdb_id, :name, presence: true
-
-  def self.create_or_find_actor(id, params = nil)
-    actor = find_by_tmdb_id(id)
-    return actor if actor
-    actor = params ? params : MovieDb.get_actor(id)
-    create(format_from_api(actor))
-  end
 
   def self.format_from_api(response)
     {
@@ -36,11 +30,6 @@ class Actor < ActiveRecord::Base
 
   def increment_times_said!
     update_attributes(times_said: times_said + 1)
-  end
-
-  def add_if_new(movie)
-    return if movies.include?(movie)
-    movies << movie
   end
 
   def retrieve_filmography
@@ -64,7 +53,7 @@ class Actor < ActiveRecord::Base
   end
 
   def add_movie(m)
-    movie = Movie.create_or_find_movie(m[:id])
+    movie = Movie.create_or_find(m[:id], m)
     add_if_new(movie)
     movie
   end

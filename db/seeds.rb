@@ -17,7 +17,7 @@ def create_cast(movie)
   puts "CAST COUNT: #{cast.count}"
   cast.each_with_index do |actor_response, i|
     puts "Creating Actor: #{actor_response["name"]}"
-    actor = Actor.create_or_find_actor(actor_response[:id], actor_response)
+    actor = Actor.create_or_find(actor_response[:id], actor_response)
     actor.valid? ? (movie.actors << actor) : puts("ACTOR NOT VALID")
     sleep 5 if i%20 == 0
   end

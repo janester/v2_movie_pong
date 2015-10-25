@@ -8,9 +8,9 @@ describe Movie do
   describe "Class Methods" do
     subject { described_class }
 
-    describe ".create_or_find_movie" do
+    describe ".create_or_find" do
       let(:id) { 1234 }
-      let(:return_value) { subject.create_or_find_movie(id) }
+      let(:return_value) { subject.create_or_find(id) }
 
       before { allow(MovieDb).to receive(:get_movie).with(id) { { "id" => id } } }
 
@@ -68,14 +68,14 @@ describe Movie do
           let(:credits) { [HWIA.new(id: id)] }
 
           it "does not find or create an actor record for it" do
-            expect(Actor).not_to receive(:create_or_find_actor).with(id)
+            expect(Actor).not_to receive(:create_or_find).with(id)
             subject.get_cast!
           end
         end
 
         context "when an actor response is a character" do
           it "does find or create an actor record for it" do
-            expect(Actor).to receive(:create_or_find_actor).with(id, credits.first).and_call_original
+            expect(Actor).to receive(:create_or_find).with(id, credits.first).and_call_original
             subject.get_cast!
           end
         end

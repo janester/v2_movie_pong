@@ -16,13 +16,13 @@ describe Actor do
   describe "Class Methods" do
     subject { described_class }
 
-    describe ".create_or_find_actor" do
+    describe ".create_or_find" do
       let(:id) { 1234 }
-      let(:call) { subject.create_or_find_actor(id) }
+      let(:call) { subject.create_or_find(id) }
       context "when the id does not exist in the database" do
         context "when all the info is passed in" do
           let(:params) { HWIA.new(id: id, name: "Hugh Jackman") }
-          let(:call) { subject.create_or_find_actor(id, params) }
+          let(:call) { subject.create_or_find(id, params) }
           it "creates a new record" do
             expect(subject).to receive(:create)
             call
