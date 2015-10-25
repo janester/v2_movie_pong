@@ -13,6 +13,7 @@
 #
 
 class Movie < ActiveRecord::Base
+  include MoviePong::Common
   attr_accessible :title, :year, :tmdb_id, :tmdb_popularity, :times_said, :full_cast_available, :starting_movie
   has_and_belongs_to_many :actors
   has_and_belongs_to_many :games
@@ -23,13 +24,6 @@ class Movie < ActiveRecord::Base
   scope :starting_movies, where(starting_movie: true)
 
   class << self
-    def create_or_find_movie(id)
-      movie = find_by_tmdb_id(id)
-      return movie if movie
-      movie = MovieDb.get_movie(id)
-      create(format_from_api(movie))
-    end
-
     def format_from_api(response)
       {
         tmdb_id: response["id"],
@@ -44,11 +38,6 @@ class Movie < ActiveRecord::Base
     return true if actors.pluck(:tmdb_id).include?(actor_id)
   end
 
-  def add_if_new(actor)
-    return if actors.include?(actor)
-    actors << actor
-  end
-
   def get_cast!
     return if full_cast_available
     get_characters.map { |a| add_actor(a) }
@@ -56,8 +45,9 @@ class Movie < ActiveRecord::Base
   end
 
   def add_actor(params)
-    actor = Actor.create_or_find_actor(params[:id], params)
+    actor = Actor.create_or_find(params[:id], params)
     add_if_new(actor)
+    actor
   end
 
   def get_characters
