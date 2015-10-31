@@ -19,6 +19,7 @@
 require File.expand_path("../../config/environment", __FILE__)
 require "shoulda/matchers"
 require "rspec/rails"
+require "capybara/rails"
 
 Rails.env = "test"
 
