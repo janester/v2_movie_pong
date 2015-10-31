@@ -14,7 +14,7 @@
 <body>
   <%= render :partial => "layouts/header" %>
   <%= render :partial => "layouts/nav" %>
-<%= yield %>
+  <%= yield %>
   <%= render :partial => "layouts/footer" %>
 
   <div id="myModal" class="reveal-modal medium">
@@ -24,6 +24,7 @@
 
   </div>
   <%= render :partial => 'layouts/ga' if Rails.env == 'production' %>
+
   <script type="text/javascript">
     $(document).foundation();
   </script>

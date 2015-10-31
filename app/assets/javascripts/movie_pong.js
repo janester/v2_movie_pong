@@ -4,7 +4,7 @@ $(function(){
   $("#start_game_btn_disabled").click(function(){ alert("You Must Be Logged In to Play");});
   get_start_movies();
   $("body").on("click", ".reveal-modal-bg", close_modal);
-  $("#i_dont_know_btn").on("click", user_doesnt_know)
+  // $("#i_dont_know_btn").on("click", user_doesnt_know)
   // $('body').on("click", "#myModal", close_modal);
 });
 

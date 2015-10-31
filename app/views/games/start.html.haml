@@ -9,7 +9,12 @@
     #movie_tmdb.hide
     =text_field_tag :entered_actor
     =link_to("Enter", "#", :class => "button radius", :id => "entered_actor_btn")
-    =link_to("IDK", "#", :class => "button radius alert hide", :id => "i_dont_know_btn")
+    =link_to("IDK", "#", class: "button dropdown radius alert hide", id: "i_dont_know_btn", "data-dropdown"=>"idk_options")
+    %ul#idk_options.f-dropdown
+      %li
+        =link_to("I've Never Heard of this Movie", "#")
+      %li
+        =link_to("I Can't Think of Anyone Else in this Movie", "#")
     %h3#or OR
     =link_to("Ask For A New Movie", "#", :class => "button radius", :id => "new_movie_btn")
     #game.hide= @game.id
