@@ -1,8 +1,9 @@
 require "spec_helper"
 
 describe "Navbar" do
+  include LoginHelper
+
   let(:nav) { page.find("nav") }
-  let(:go_home) { visit "/" }
 
   it "has a link to home" do
     go_home
@@ -39,13 +40,5 @@ describe "Navbar" do
     it "has the log in link" do
       expect(nav).to have_link("Login", href: "/login")
     end
-  end
-
-  def sign_in_user(user)
-    visit "/"
-    click_link(nil, href: "/login")
-    fill_in("username", with: user.username)
-    fill_in("password", with: user.password)
-    click_button("Login to Movie Pong")
   end
 end
