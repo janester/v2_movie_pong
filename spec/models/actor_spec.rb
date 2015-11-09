@@ -1,3 +1,16 @@
+# == Schema Information
+#
+# Table name: actors
+#
+#  id         :integer          not null, primary key
+#  name       :string(255)
+#  tmdb_id    :integer
+#  times_said :integer          default(0)
+#  created_at :datetime         not null
+#  updated_at :datetime         not null
+#  popularity :float
+#
+
 require "spec_helper"
 
 describe Actor do
