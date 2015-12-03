@@ -20,8 +20,11 @@ require File.expand_path("../../config/environment", __FILE__)
 require "shoulda/matchers"
 require "rspec/rails"
 require "capybara/rails"
+require "capybara/poltergeist"
 
 Rails.env = "test"
+
+Capybara.javascript_driver = :poltergeist if ENV["CI"]
 
 RSpec.configure do |config|
   config.use_transactional_fixtures = false
