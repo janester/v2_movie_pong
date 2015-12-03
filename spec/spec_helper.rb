@@ -24,7 +24,7 @@ require "capybara/poltergeist"
 
 Rails.env = "test"
 
-Capybara.javascript_driver = :poltergeist if ENV["CI"]
+# Capybara.javascript_driver = :poltergeist if ENV["CI"]
 
 RSpec.configure do |config|
   config.use_transactional_fixtures = false

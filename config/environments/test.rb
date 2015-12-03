@@ -34,5 +34,4 @@ V2MoviePong::Application.configure do
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
-  config.action_dispatch.show_exceptions = false
 end
