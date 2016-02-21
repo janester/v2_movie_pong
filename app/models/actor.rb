@@ -38,14 +38,15 @@ class Actor < ActiveRecord::Base
     movie_responses.is_a?(Array) ? movie_responses : []
   end
 
-  def future_year?(x)
-    return true if x.nil?
-    return true if x[0...4].to_i > CURRENT_YEAR
-    false
+  def released_in_the_future?(x)
+    release_date = DateTime.parse(x)
+    release_date.future?
+  rescue
+    true
   end
 
   def ordered_filmography
-    past_films = retrieve_filmography.reject { |x| future_year?(x["release_date"]) }
+    past_films = retrieve_filmography.reject { |x| released_in_the_future?(x["release_date"]) }
     past_films.sort_by { |x| DateTime.parse(x["release_date"]) }.reverse
   end
 
