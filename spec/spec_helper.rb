@@ -24,7 +24,6 @@ require "capybara/poltergeist"
 
 Rails.env = "test"
 
-# Capybara.javascript_driver = :poltergeist if ENV["CI"]
 Capybara.default_wait_time = 15
 
 RSpec.configure do |config|
