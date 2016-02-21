@@ -4,6 +4,7 @@ $(function(){
   $("#start_game_btn_disabled").click(function(){ alert("You Must Be Logged In to Play");});
   get_start_movies();
   $("body").on("click", ".reveal-modal-bg", close_modal);
+  $(".idk-option").click(send_idk);
   // $('body').on("click", "#myModal", close_modal);
 });
 
@@ -220,7 +221,9 @@ function show_start_stuff()
   $("#or").show();
   $("#new_movie_btn").show();
   $("#entered_actor").val("");
+  $("span[data-dropdown='drop1']").click()
   $("#idk_btn").addClass("hide");
+
 }
 
 function update_round_count()
@@ -256,3 +259,28 @@ function spin_init()
 
 //SPINNER***********************************************
 
+
+//IDK****************************************************
+
+function send_idk(e){
+  e.preventDefault();
+
+  var movie = $("#movie_tmdb").text();
+  var game_id = $("#game").text();
+  var reason = $(this).data("reason")
+
+  $.ajax({
+  dataType: 'json',
+  type: "post",
+  url: "/games/"+game_id+"/dont_know",
+  error: function(error){
+    $("#spinner").empty();
+    console.log(error);
+    alert("Sorry Something Went Wrong...");
+    location.reload();
+  },
+  data: {movie_id:movie, reason: reason, game_id:game_id}
+  }).done(update_page);
+  spin_init();
+  return false;
+}

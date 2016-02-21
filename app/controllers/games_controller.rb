@@ -2,8 +2,8 @@ class GamesController < ApplicationController
   HARDNESS_LIMIT = 3
   before_filter :populate_scores
   before_filter :set_last_actor, only: [:get_info]
-  before_filter :increment_round, only: [:play]
-  before_filter :add_movie_to_game, only: [:play]
+  before_filter :increment_round, only: [:play, :dont_know]
+  before_filter :add_movie_to_game, only: [:play, :dont_know]
   before_filter :increment_movie_times_said, only: [:play]
 
   def index
@@ -26,6 +26,16 @@ class GamesController < ApplicationController
     new_movie.get_cast!
     render json: { scores: game.scores, movie: new_movie, actors: actors }
   end
+
+  def dont_know
+    return dont_know_anyone_else if params[:reason] == "1"
+    Movie.transaction do
+      movie.decrement_times_said!
+      movie.update_attributes(starting_movie: false)
+    end
+    render json: { scores: game.scores, message: "Okay, I am taking that one out of the rotation" }
+  end
+
 
   def get_next_movie
     actor.get_movies!
@@ -67,6 +77,11 @@ class GamesController < ApplicationController
   def actor_not_in_movie
     game.scores.create(player: 1)
     render json: { scores: game.scores, message: "#{actor.name} is not in #{movie.title}" }
+  end
+
+  def dont_know_anyone_else
+    game.scores.create(player: 1)
+    render json: { scores: game.scores, message: "It's okay. I'm hard to beat ;)" }
   end
 
   def start

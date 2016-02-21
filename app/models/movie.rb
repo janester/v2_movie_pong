@@ -64,4 +64,8 @@ class Movie < ActiveRecord::Base
   def increment_times_said!
     update_attributes(times_said: times_said + 1)
   end
+
+  def decrement_times_said!
+    update_attributes(times_said: times_said - 1)
+  end
 end
