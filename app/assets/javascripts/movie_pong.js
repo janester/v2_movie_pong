@@ -121,6 +121,8 @@ function hide_start_stuff()
 {
   $("#or").hide();
   $("#new_movie_btn").hide();
+  $("#idk_btn").removeClass("hide");
+
 }
 
 function update_page(message)
@@ -218,6 +220,7 @@ function show_start_stuff()
   $("#or").show();
   $("#new_movie_btn").show();
   $("#entered_actor").val("");
+  $("#idk_btn").addClass("hide");
 }
 
 function update_round_count()
