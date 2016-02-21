@@ -1,12 +1,12 @@
-class GamesController < ApplicationController
+class GamesController < ApplicationController # rubocop:disable ClassLength
   HARDNESS_LIMIT = 3
   before_filter :populate_scores
-  before_filter :set_last_actor, only: [:get_info]
   before_filter :increment_round, only: [:play, :dont_know]
   before_filter :add_movie_to_game, only: [:play, :dont_know]
   before_filter :increment_movie_times_said, only: [:play]
 
   def index
+    # root
   end
 
   def create
@@ -29,13 +29,9 @@ class GamesController < ApplicationController
 
   def dont_know
     return dont_know_anyone_else if params[:reason] == "1"
-    Movie.transaction do
-      movie.decrement_times_said!
-      movie.update_attributes(starting_movie: false)
-    end
+    movie.mark_as_unkown
     render json: { scores: game.scores, message: "Okay, I am taking that one out of the rotation" }
   end
-
 
   def get_next_movie
     actor.get_movies!
@@ -116,12 +112,8 @@ class GamesController < ApplicationController
     @actor ||= Actor.find_by_tmdb_id(params[:actor_id])
   end
 
-  def set_last_actor
-    session[:last_actor] = Actor.last.try(:id)
-  end
-
   def game
-    @game ||= Game.includes(:movies, :scores).find(params[:id])
+    @game ||= Game.includes(:movies, :scores).find_by_id(params[:id])
   end
 
   def populate_scores

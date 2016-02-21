@@ -68,4 +68,11 @@ class Movie < ActiveRecord::Base
   def decrement_times_said!
     update_attributes(times_said: times_said - 1)
   end
+
+  def mark_as_unkown
+    self.class.transaction do
+      decrement_times_said!
+      update_attributes(starting_movie: false)
+    end
+  end
 end

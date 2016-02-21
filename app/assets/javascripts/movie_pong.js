@@ -195,10 +195,6 @@ function update_score(message)
   {
     show_modal_with_text("Woah. You're Smarter than a Computer.", true);
   }
-  else if(last.computer === 0)
-  {
-    show_modal_with_text(message.message, false);
-  }
   else
   {
     show_modal_with_text(message.message, false);
