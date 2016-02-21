@@ -12,6 +12,7 @@ gem "themoviedb"
 gem "rest-client"
 gem "unicorn"
 gem "typhoeus"
+gem "figaro"
 
 # gem 'ruby-tmdb'
 # gem 'textacular', '~> 3.0', require: 'textacular/rails'
