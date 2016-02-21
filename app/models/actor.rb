@@ -8,6 +8,7 @@
 #  times_said :integer          default(0)
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
+#  popularity :float
 #
 
 class Actor < ActiveRecord::Base

@@ -102,7 +102,7 @@ class GamesController < ApplicationController
   end
 
   def set_last_actor
-    session[:last_actor] = Actor.last.id
+    session[:last_actor] = Actor.last.try(:id)
   end
 
   def game

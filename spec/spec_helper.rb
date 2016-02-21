@@ -19,8 +19,12 @@
 require File.expand_path("../../config/environment", __FILE__)
 require "shoulda/matchers"
 require "rspec/rails"
+require "capybara/rails"
+require "capybara/poltergeist"
 
 Rails.env = "test"
+
+Capybara.default_wait_time = 15
 
 RSpec.configure do |config|
   config.use_transactional_fixtures = false
@@ -30,12 +34,23 @@ RSpec.configure do |config|
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
     DatabaseCleaner.clean_with(:truncation)
+    Capybara.ignore_hidden_elements = false
   end
 
-  config.around(:each) do |example|
-    DatabaseCleaner.cleaning do
-      example.run
-    end
+  config.before(:each, js: true) do
+    DatabaseCleaner.strategy = :truncation
+  end
+
+  config.after(:each, js: true) do
+    DatabaseCleaner.strategy = :transaction
+  end
+
+  config.before(:each) do
+    DatabaseCleaner.start
+  end
+
+  config.after(:each) do
+    DatabaseCleaner.clean
   end
 
   config.before(:each) do

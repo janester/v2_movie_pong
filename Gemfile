@@ -43,4 +43,7 @@ group :development, :test do
   gem "rubocop", "~> 0.28", require: false
   gem "factory_girl_rails"
   gem "database_cleaner"
+  gem "capybara"
+  gem "selenium-webdriver"
+  gem "poltergeist"
 end

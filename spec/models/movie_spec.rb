@@ -1,3 +1,19 @@
+# == Schema Information
+#
+# Table name: movies
+#
+#  id                  :integer          not null, primary key
+#  title               :string(255)
+#  year                :integer
+#  tmdb_id             :integer
+#  times_said          :integer          default(0)
+#  created_at          :datetime         not null
+#  updated_at          :datetime         not null
+#  tmdb_popularity     :integer          default(0)
+#  starting_movie      :boolean          default(FALSE)
+#  full_cast_available :boolean          default(FALSE)
+#
+
 require "spec_helper"
 
 describe Movie do
