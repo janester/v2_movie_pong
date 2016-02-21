@@ -2,8 +2,8 @@ class GamesController < ApplicationController
   HARDNESS_LIMIT = 3
   before_filter :populate_scores
   before_filter :set_last_actor, only: [:get_info]
-  before_filter :increment_round, only: [:play]
-  before_filter :add_movie_to_game, only: [:play]
+  before_filter :increment_round, only: [:play, :dont_know]
+  before_filter :add_movie_to_game, only: [:play, :dont_know]
   before_filter :increment_movie_times_said, only: [:play]
 
   def index
@@ -20,11 +20,17 @@ class GamesController < ApplicationController
   def play
     return actor_not_in_movie unless movie.has_actor?(actor_id)
     return actor_already_said if game.actor_already_said?(actor_id)
-    add_actor_to_game
+    game.add_actor(actor)
     new_movie = get_next_movie
     return no_more_popular_movies unless new_movie
     new_movie.get_cast!
-    render json: { scores: game.scores, movie: new_movie, actors: actors }
+    render json: { scores: score_serializer, movie: new_movie, actors: actors }
+  end
+
+  def dont_know
+    movie.decrement_times_said!
+    game.point_for(:player)
+    render json: { scores: score_serializer, message: "Okay, let's start a new round" }
   end
 
   def get_next_movie
@@ -38,8 +44,8 @@ class GamesController < ApplicationController
   end
 
   def no_more_popular_movies
-    game.scores.create(computer: 1)
-    render json: { scores: game.scores, message: "Nice! You out-witted a comptuer!" }
+    game.point_for(:computer)
+    render json: { scores: score_serializer, message: "Nice! You out-witted a computer!" }
   end
 
   def add_movie_to_game
@@ -50,23 +56,18 @@ class GamesController < ApplicationController
     movie.increment_times_said!
   end
 
-  def add_actor_to_game
-    game.actors << actor
-    actor.increment_times_said!
-  end
-
   def increment_round
     session[:round] += 1
   end
 
   def actor_already_said
-    game.scores.create(player: 1)
-    render json: { scores: game.scores, message: "#{actor.name} has already been said" }
+    game.point_for(:player)
+    render json: { scores: score_serializer, message: "#{actor.name} has already been said" }
   end
 
   def actor_not_in_movie
-    game.scores.create(player: 1)
-    render json: { scores: game.scores, message: "#{actor.name} is not in #{movie.title}" }
+    game.point_for(:player)
+    render json: { scores: score_serializer, message: "#{actor.name} is not in #{movie.title}" }
   end
 
   def start
@@ -79,7 +80,7 @@ class GamesController < ApplicationController
 
   def starting_movies
     movies = Movie.starting_movies
-    movies = movies.has_not_been_used(said_movies) unless game.movies.empty?
+    movies = movies.has_not_been_used(game.said_movies) unless game.movies.empty?
     movies.shuffle
   end
 
@@ -87,11 +88,11 @@ class GamesController < ApplicationController
     Actor.select("name, tmdb_id")
   end
 
-  private
-
-  def said_movies(g = nil)
-    (g || game).movies.pluck(:id)
+  def score_serializer
+    game.scores.select("computer, player")
   end
+
+  private
 
   def movie
     @movie ||= Movie.find_by_tmdb_id(params[:movie_id])

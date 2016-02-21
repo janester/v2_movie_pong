@@ -91,6 +91,8 @@
     },
 
     open: function (dropdown, target) {
+        // debugger;
+
         this
           .css(dropdown
             .addClass(this.settings.activeClass), target);
@@ -149,7 +151,6 @@
           }
           var left = position.left - (this.outerWidth(dropdown) - this.outerWidth(target));
         }
-
         dropdown.attr('style', '').css({
           position : 'absolute',
           top: position.top + this.outerHeight(target),
