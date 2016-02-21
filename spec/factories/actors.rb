@@ -1,6 +1,6 @@
 FactoryGirl.define do
   factory :actor do
-    name "Hugh Jackman"
+    sequence(:name) { |n| "Hugh Jackman #{n}" }
     sequence(:tmdb_id) { |n| 4567 + n }
     times_said 0
 
