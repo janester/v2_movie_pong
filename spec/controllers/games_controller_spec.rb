@@ -192,4 +192,42 @@ describe GamesController do
       end
     end
   end
+
+  describe "POST dont_know" do
+    let(:make_request) { post(:dont_know, reason: reason, movie_id: movie.tmdb_id, id: game.id) }
+    let(:movie) { create(:movie) }
+    before { controller.session[:round] = 0 }
+
+    context "before filters" do
+      it { should use_before_filter(:populate_scores) }
+      it { should use_before_filter(:increment_round) }
+      it { should use_before_filter(:add_movie_to_game) }
+    end
+
+    context "when reason is 0 (never heard of the movie)" do
+      let(:reason) { "0" }
+      it "does not increment the score" do
+        expect { make_request }.to_not change(Score, :count)
+      end
+
+      it "the movie is not a starting movie" do
+        make_request
+        expect(movie.reload.starting_movie).to eq false
+      end
+
+      it "decrements the movie times said" do
+        expect(movie.times_said).to eq 0
+        make_request
+        expect(movie.reload.times_said).to eq(-1)
+      end
+    end
+
+    context "when reason is 1 (doesnt know anyone else in the movie)" do
+      let(:reason) { "1" }
+      it "increments the players score" do
+        make_request
+        expect(game.scores.last.for_player?).to eq true
+      end
+    end
+  end
 end

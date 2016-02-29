@@ -49,6 +49,7 @@ class GamesController < ApplicationController # rubocop:disable ClassLength
   end
 
   def add_movie_to_game
+    return unless movie
     game.movies << movie
   end
 
