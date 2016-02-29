@@ -1,12 +1,12 @@
-class GamesController < ApplicationController
+class GamesController < ApplicationController # rubocop:disable ClassLength
   HARDNESS_LIMIT = 3
   before_filter :populate_scores
-  before_filter :set_last_actor, only: [:get_info]
-  before_filter :increment_round, only: [:play]
-  before_filter :add_movie_to_game, only: [:play]
+  before_filter :increment_round, only: [:play, :dont_know]
+  before_filter :add_movie_to_game, only: [:play, :dont_know]
   before_filter :increment_movie_times_said, only: [:play]
 
   def index
+    # root
   end
 
   def create
@@ -27,6 +27,12 @@ class GamesController < ApplicationController
     render json: { scores: game.scores, movie: new_movie, actors: actors }
   end
 
+  def dont_know
+    return dont_know_anyone_else if params[:reason] == "1"
+    movie.mark_as_unkown
+    render json: { scores: game.scores, message: "Okay, I am taking that one out of the rotation" }
+  end
+
   def get_next_movie
     actor.get_movies!
     possible_movies = actor.movies.order_by_popularity.limit(HARDNESS_LIMIT)
@@ -43,6 +49,7 @@ class GamesController < ApplicationController
   end
 
   def add_movie_to_game
+    return unless movie
     game.movies << movie
   end
 
@@ -67,6 +74,11 @@ class GamesController < ApplicationController
   def actor_not_in_movie
     game.scores.create(player: 1)
     render json: { scores: game.scores, message: "#{actor.name} is not in #{movie.title}" }
+  end
+
+  def dont_know_anyone_else
+    game.scores.create(player: 1)
+    render json: { scores: game.scores, message: "It's okay. I'm hard to beat ;)" }
   end
 
   def start
@@ -101,12 +113,8 @@ class GamesController < ApplicationController
     @actor ||= Actor.find_by_tmdb_id(params[:actor_id])
   end
 
-  def set_last_actor
-    session[:last_actor] = Actor.last.try(:id)
-  end
-
   def game
-    @game ||= Game.includes(:movies, :scores).find(params[:id])
+    @game ||= Game.includes(:movies, :scores).find_by_id(params[:id])
   end
 
   def populate_scores
